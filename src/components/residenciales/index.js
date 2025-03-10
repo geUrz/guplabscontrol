@@ -1,0 +1,6 @@
+export * from './ResidencialList'
+export * from './ResidencialDetalles'
+export * from './ResidencialForm'
+export * from './ResidencialEditForm'
+export * from './ResidencialesListSearch'
+export * from './SearchResidencial'

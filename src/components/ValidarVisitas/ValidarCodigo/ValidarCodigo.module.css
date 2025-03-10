@@ -1,0 +1,93 @@
+.main {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.section {
+  padding-bottom: 20px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.section div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconQr{
+  cursor: pointer;
+}
+
+.iconQr svg, .iconQr path{
+  margin-left: 10px;
+  font-size: 30px;
+  color: var(--clrGR000);
+  cursor: pointer;
+}
+
+.iconQr div svg:hover, .iconQr div:hover path{
+  color: var(--clrGR00);
+}
+
+.iconQr div svg:active, .iconQr div:active path{
+  color: var(--clrGR0);
+}
+
+.resultMessage{
+  padding: 0 10px;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.resultMessage span{
+  margin-top: 5px;
+  font-size: 16px;
+  text-align: center;
+  color: var(--clrBL000);
+}
+
+.error{
+  padding: 0 10px;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.error span{
+  margin-top: 5px;
+  font-size: 16px;
+  text-align: center;
+  color: red;
+}
+
+.sectionCamera{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.qrScanner{
+  width: 100%;
+}
+
+.iconCam svg, .iconCam path{
+  margin-top: 30px;
+  font-size: 50px;
+  color: var(--clrBL000);
+  cursor: pointer;
+}

@@ -1,0 +1,32 @@
+.img{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.img img{
+  height: 500px;
+  border-radius: 2%;
+}
+
+.img svg, .img path{
+  margin-top: 20px;
+  font-size: 20px;
+  color: var(--clrR0);
+  cursor: pointer;
+}
+
+.img svg:hover, .img path:hover{
+  color: var(--clrR1);
+}
+
+.img svg:active, .img path:active{
+  color: var(--clrR2);
+}
+
+/* .img img{
+  width: 100%;
+  border-radius: 2%;
+} */

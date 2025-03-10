@@ -1,0 +1,5 @@
+export * from './IncidenciasList'
+export * from './IncidenciaDetalles'
+export * from './IncidenciaForm'
+export * from './IncidenciasListSearch'
+export * from './SearchIncidencia'

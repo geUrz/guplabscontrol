@@ -1,0 +1,25 @@
+.iconClose{
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.iconClose{
+  cursor: pointer;
+}
+
+.iconClose svg, .iconClose path{
+  padding: 8px;
+  font-size: 40px;
+  color: var(--clrGR00);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.iconClose svg:hover,.iconClose path:hover{
+  background-color: var(--clrGR3);
+}
+
+.iconClose svg:active,.iconClose path:active{
+  background-color: var(--clrGR4);
+}

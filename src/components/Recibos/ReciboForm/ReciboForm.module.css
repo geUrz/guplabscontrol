@@ -1,0 +1,206 @@
+.main{
+  display: flex;
+  flex-direction: column;
+}
+
+.section{
+  width: 100%;
+  height: auto;
+}
+
+.main{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.rowMap{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--clrGR5);
+}
+
+.rowMap:hover{
+  background-color: var(--clrGR4);
+}
+
+.rowMap h1{
+  padding: 6.5px 0 !important;
+  height: auto;
+  font-size: 12px;
+  color: black;
+}
+
+.rowMap h1:nth-child(1){
+  width: 20%;
+  font-size: 11px;
+  text-align: center;
+}
+
+.rowMap h1:nth-child(2){
+  padding-left: 5px !important;
+  width: 50%;
+  text-align: left;
+}
+
+.rowMap h1:nth-child(3){
+  padding-left: 5px !important;
+  width: 20%;
+  font-size: 10px;
+  text-align: right;
+}
+
+.rowMap h1:nth-child(4){
+  width: 10%;
+  font-size: 10px;
+  text-align: center;
+}
+
+.rowMap h1:nth-child(5){
+  padding-right: 3.5px !important;
+  width: 24%;
+  font-size: 10px;
+  text-align: right;
+}
+
+.iconClose{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.iconClose svg, .iconClose path{
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.iconCheck{
+  margin-bottom: 20px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.iconCheck:hover{
+  background-color: var(--clrGR2);
+}
+
+.iconCheck:active{
+  background-color: var(--clrGR3);
+}
+
+.iconCheck svg, .iconCheck path{
+  font-size: 22px;
+  color: var(--clrBL0);
+  cursor: pointer;
+}
+
+.sectionTotal{
+  padding: 20px 2px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.toggleCot{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.toggleOff, .toggleOn{
+  font-size: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.toggleOFF, .toggleON{
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggleOFF svg, .toggleOff svg, .toggleON svg, .toggleOn svg, .toggleOFF path, .toggleOff path, .toggleON path, .toggleOn path{
+  margin-right: 5px;
+  color: var(--clrGR0);
+  cursor: pointer;
+}
+
+.toggleON svg, .toggleOn svg, .toggleON path, .toggleOn path{
+  color: var(--clrBL000);
+  cursor: pointer;
+}
+
+.box3{
+  padding-right: 3.5px !important;
+  margin-top: 30px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.box3 h1{
+  margin: 2.8px 0;
+  font-size: 11.5px;
+  color: black;
+}
+
+.box3 h1:nth-child(3){
+  font-weight: 600 !important;
+}
+
+.box3_1{
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.box3_2 h1{
+  padding: 3.2px 0 !important;
+  font-size: 12.5px;
+  text-align: right;
+}
+
+.iconClose svg, .iconClose path{
+  padding: 8px;
+  font-size: 34px;
+  color: var(--clrGR00);
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.iconClose svg:hover,.iconClose path:hover{
+  background-color: var(--clrGR3);
+}
+
+.iconClose svg:active,.iconClose path:active{
+  background-color: var(--clrGR4);
+}
+
+.main span{
+  margin-top: 5px;
+  font-size: 11.5px;
+  color: red;
+}

@@ -1,0 +1,50 @@
+.main{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 100px;
+}
+
+.section{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.section > div{
+  padding: 10px;
+  margin-right: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--clrBL00);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.section div:hover{
+  background-color: var(--clrBL0);
+}
+
+.section div:active{
+  background-color: var(--clrBL1);
+}
+
+.section svg, .section path{
+  font-size: 20px;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 1024px){
+
+  .section{
+    max-width: 665px;
+  }
+
+}

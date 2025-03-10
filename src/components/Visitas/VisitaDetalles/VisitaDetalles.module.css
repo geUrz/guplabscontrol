@@ -1,0 +1,309 @@
+.section{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.box1{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.box1 h1{
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 600 !important;
+  color: var(--clrBL0000);
+}
+
+.box1 h2{
+  margin-top: 3px;
+  font-size: 14px;
+  color: var(--clrGR0000);
+}
+
+.box1_1, .box1_2{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.box1_1 div, .box1_2 div{
+  margin: 5px 0;
+}
+
+.box1_1{
+  width: 50%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.box1_1 h1, .box1_1 h2{
+  text-align: left;
+}
+
+.box1_2{
+  width: 50%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+.box1_2 h1, .box1_2 h2{
+  text-align: right;
+}
+
+.codigo{
+  margin-top: 20px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.codigo h1{
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 600 !important;
+  color: var(--clrBL0000);
+}
+
+.codigo h2{
+  margin-top: 3px;
+  font-size: 14px;
+  color: black;
+}
+.codigo img{
+  margin-top: 20px;
+  height: 200px;
+}
+
+.diasMain{
+  padding: 0 10px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.diasMain h1, .diasMain h2, .diasMain h3{
+  font-size: 16.5px;
+  text-align: center;
+  word-break: break-all;
+  color: var(--clrGR000);
+}
+
+.diasMain h2{
+  margin-top: 10px;
+  color: var(--clrBL000);
+}
+
+.iconClose svg, .iconClose path{
+  padding: 8px;
+  font-size: 34px;
+  color: var(--clrGR00);
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.iconClose svg:hover,.iconClose path:hover{
+  background-color: var(--clrGR3);
+}
+
+.iconClose svg:active,.iconClose path:active{
+  background-color: var(--clrGR4);
+}
+
+.iconCheck{
+  margin-bottom: 20px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.iconCheck:hover{
+  background-color: var(--clrGR2);
+}
+
+.iconCheck:active{
+  background-color: var(--clrGR3);
+}
+
+.iconCheck svg, .iconCheck path{
+  font-size: 22px;
+  color: var(--clrBL1);
+  cursor: pointer;
+}
+
+.tipoAcc h2{
+  text-transform: capitalize;
+}
+
+.reporta div, .tipoAcc div{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.reporta h2{
+  text-transform: capitalize;
+}
+
+.reporta div svg, .reporta div path, .tipoAcc div svg, .tipoAcc div path{
+  margin-left: 5px;
+  color: var(--clrBL0);
+  cursor: pointer;
+}
+
+.reporta div svg:hover, .reporta div:hover path, .tipoAcc div svg:hover, .tipoAcc div:hover path{
+  color: var(--clrBL1);
+}
+
+.reporta div svg:active, .reporta div:active path, .tipoAcc div svg:active, .tipoAcc div:active path{
+  color: var(--clrBL2);
+}
+
+.imgMain{
+  margin-top: 20px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.imgMain h1{
+  font-size: 14px;
+  font-weight: 600 !important;
+  color: var(--clrBL0);
+}
+
+.mainTab{
+  margin-top: 20px;
+}
+
+.tabContent{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabContent > div{
+  margin: 15px 5px;
+  width: 118px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tabContent img{
+  width: 80px;
+  height: 80px;
+  border-radius: 8%;
+  cursor: pointer;
+}
+
+.tabContent h1{
+  margin-top: 4px;
+  font-size: 12.5px;
+  text-align: center;
+  color: var(--clrGR0000);
+}
+
+.faImage{
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.tabContent svg, .tabContent path{
+  font-size: 60px;
+  color: var(--clrGR00);
+  cursor: pointer;
+}
+
+.iconEdit{
+  margin-top: 30px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconEdit svg, .iconEdit path{
+  font-size: 26px;
+  color: var(--clrBL0000);
+  cursor: pointer;
+}
+
+.iconEdit svg:hover, .iconEdit:hover path{
+  color: var(--clrBL0);
+}
+
+.iconEdit svg:active, .iconEdit:active path{
+  color: var(--clrBL1);
+}
+
+.actionsBottom{
+  margin-top: 30px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actionsBottom div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconDown{
+  margin-left: 20px;
+}
+
+.iconDown svg, .iconDown path, .iconShare svg, .iconShare path{
+  margin-right: 20px;
+  font-size: 20px;
+  color: var(--clrGR000);
+  cursor: pointer;
+}
+
+.iconDown svg:hover, .iconDown:hover path, .iconShare svg:hover, .iconShare:hover path{
+  color: var(--clrGR00);
+}
+
+.iconDown svg:active, .iconDown:active path, .iconShare svg:active, .iconShare:active path{
+  color: var(--clrGR0);
+}
+
+.iconDel{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}

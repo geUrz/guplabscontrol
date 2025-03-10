@@ -1,0 +1,55 @@
+.iconClose{
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.iconClose:hover{
+  background-color: var(--clrGR0);
+}
+
+.iconClose:active{
+  background-color: var(--clrGR1);
+}
+
+.iconClose svg, .iconClose path{
+  font-size: 18px;
+  color: var(--clrBL2);
+  cursor: pointer;
+}
+
+.iconCheck{
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.iconCheck:hover{
+  background-color: var(--clrGR0);
+}
+
+.iconCheck:active{
+  background-color: var(--clrGR1);
+}
+
+.iconCheck svg, .iconCheck path{
+  font-size: 24px;
+  color: var(--clrBL2);
+  cursor: pointer;
+}
+
+.error{
+  margin-top: 5px;
+  font-size: 12px;
+  color: red;
+}

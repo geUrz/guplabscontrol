@@ -1,0 +1,39 @@
+:root{
+  --bg0:rgb(22, 22, 22);
+  --bg1:rgb(48, 48, 48);
+  --bg2: rgb(61, 61, 61);
+  --bg3: rgb(83, 83, 83);
+  --bg4: rgb(102, 102, 102);
+
+  
+  --clrBL0000:rgb(0, 86, 95);
+  --clrBL000:rgb(0, 96, 107);
+  --clrBL00: #006b77;
+  --clrBL0: #007785;
+  --clrBL1: #008494;
+  --clrBL2: rgb(0, 150, 170);
+  --clrBL3: #00a9bf;
+  --clrBL4: #00bcd4;
+  --clrBL5: #01c9e4;
+  --clrBL6: #02d8f5;
+
+  --clrGR0000: rgb(107, 107, 107);
+  --clrGR000: rgb(131, 131, 131);
+  --clrGR00: rgb(148, 148, 148);
+  --clrGR0: rgb(165, 165, 165);
+  --clrGR1: rgb(184, 184, 184);
+  --clrGR2: rgb(202, 202, 202);
+  --clrGR3: rgb(216, 216, 216);
+  --clrGR4: rgb(228, 226, 226);
+  --clrGR5: rgb(241, 241, 241);
+
+  --clrR0: rgb(233, 0, 0);
+  --clrR1: rgb(255, 12, 12);
+  --clrR2: rgb(255, 46, 46);
+
+  --inProcess : #ffffc5;
+  --finish: rgb(209, 255, 209);
+
+  --body: azure;
+
+}

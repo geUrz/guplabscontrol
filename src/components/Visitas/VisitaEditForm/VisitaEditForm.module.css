@@ -1,0 +1,27 @@
+.error{
+  margin-top: 5px;
+  font-size: 11.5px;
+  color: red;
+}
+
+.diasSemana{
+  padding: 0 6px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.diasSemana div{
+  width: 45%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.formLabel{
+  color: var(--clrGR000) !important;
+}

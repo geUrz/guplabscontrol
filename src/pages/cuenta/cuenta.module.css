@@ -1,0 +1,94 @@
+.main{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.section{
+  padding: 50px 0;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.section svg, .section path{
+  font-size: 80px;
+  color: var(--clrGR00);
+}
+
+.section h1{
+  font-size: 24px;
+  color: var(--clrBL2);
+}
+
+.section div{
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section div h1{
+  font-size: 14px;
+  color: var(--clrBL2);
+}
+
+.section h2{
+  margin-left: 5px;
+  font-size: 14px;
+  color: var(--clrGR0000);
+}
+
+.iconEdit{
+  padding: 20px 0;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconEdit div{
+  cursor: pointer;
+}
+
+.iconEdit div:hover path{
+  color: var(--clrBL3);
+}
+
+.iconEdit div:active path{
+  color: var(--clrBL4);
+}
+
+.iconEdit svg, .iconEdit path{
+  font-size: 25px;
+  color: var(--clrBL2);
+  cursor: pointer;
+}
+
+.miNegocio{
+  margin-top: 30px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.miNegocio h1{
+  font-size: 26px;
+  color: gray;
+}
+
+.miNegocio h2{
+  font-size: 12px;
+  color: gray;
+}
+

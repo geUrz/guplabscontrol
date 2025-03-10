@@ -1,0 +1,131 @@
+.main{
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.section{
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--clrBL0);
+  border-radius: 0 0 50px 50px;
+  z-index: 1000;
+}
+
+.residencial{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.residencial h2{
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 600 !important;
+}
+
+.h1{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.h1 h1{
+  font-size: 24px;
+  font-family: 'Bebas' !important;
+  text-align: center;
+}
+
+.user{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.user a{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.user svg, .user path{
+  font-size: 16px; 
+  cursor: pointer;
+}
+
+.user h2{
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 600 !important;
+  cursor: pointer;
+}
+
+.topMenu{
+  display: flex;
+  align-items: center;
+}
+
+.mainNoti{
+  margin-left: 30px;
+  width: 30px;
+  height: auto;
+  position: relative;
+}
+
+.mainNoti svg, .mainNoti path{
+  margin: 0px;
+  font-size: 20px; 
+  cursor: pointer;
+}
+
+.notiCount {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -5px;
+  right: 2px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  font-size: 8.5px;
+  font-weight: 600 !important;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 1024px){
+
+  .section{
+    max-width: 650px;
+  }
+
+  .residencial svg, .residencial path{
+    font-size: 18px; 
+  }
+
+  .user svg, .user path{
+    font-size: 18px; 
+  }
+
+}

@@ -1,0 +1,80 @@
+.card{
+  margin: 0 5px 20px 5px;
+  width: 160px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--clrBL0000);
+  border-radius: 5%;
+  position: relative;
+  cursor: pointer;
+}
+
+.card:hover{
+  background-color: var(--clrBL000);
+}
+
+.card:active{
+  background-color: var(--clrBL00);
+}
+
+.card svg, .card path{
+  font-size: 26px;
+  color: azure;
+  cursor: pointer;
+}
+
+.card div:nth-child(1){ 
+  width: 35%;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--clrBL00);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.card h1{ 
+  font-size: 20px;
+  font-weight: 600 !important;
+  cursor: pointer;
+}
+
+.card div:nth-child(2){ 
+  width: 65%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.card h2{ 
+  margin-top: 8px;
+  font-size: 12.5px;
+  font-weight: 600 !important;
+  text-align: center;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 400px) {
+
+  .card{
+    margin: 0 4px 20px 4px;
+    width: 180px;
+    height: 140px;
+  }
+  
+  .card svg, .card path{
+    font-size: 28px;
+  }
+  
+  .card div:nth-child(1){ 
+    width: 38%;
+    height: 140px;
+  }
+
+}
