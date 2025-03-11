@@ -2,8 +2,8 @@
   "name": "ClicknetControl",
   "short_name": "ClicknetControl",
   "description": "Esta aplicación permite gestionar el control de visitas de manera eficiente y segura. Los usuarios pueden generar códigos QR personalizados para autorizar el acceso, facilitando la identificación y el registro de visitantes. Además, la app permite registrar incidencias en tiempo real, adjuntando evidencia mediante fotografías para un seguimiento y resolución más ágil. Con esta herramienta, se optimiza la administración de accesos y se mejora la seguridad en instalaciones o eventos.",
-  "start_url": "/join/signin",
-  "display": "standalone",
+  "start_url": "/",
+  "display": "fullscreen",
   "background_color": "#0C7786",
   "theme_color": "#0C7786",
   "icons": [
