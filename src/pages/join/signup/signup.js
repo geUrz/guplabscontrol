@@ -280,7 +280,7 @@ export default function Signup() {
                 {errors.confirmarPassword && <Message negative>{errors.confirmarPassword}</Message>}
               </FormField>
             </FormGroup>
-            {error && <p className={styles.error}>{error}</p>}
+            {error && <Message>{error}</Message>}
             <Button primary type='submit'>
               Crear
             </Button>

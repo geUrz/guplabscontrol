@@ -8,7 +8,9 @@ export function BasicLayout(props) {
     children, 
     relative=false,
     title,
-    categorie
+    categorie,
+    reload,
+    onReload
   } = props
 
   return (
@@ -21,7 +23,7 @@ export function BasicLayout(props) {
       {children}
     </div>
 
-    <QRResidente />
+    <QRResidente reload={reload} onReload={onReload} />
 
     <BottomMenu categorie={categorie}/>
 

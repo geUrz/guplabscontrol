@@ -299,7 +299,7 @@ export function VisitaDetalles(props) {
       menuItem: 'Lector QR',
       render: () => (
         <Tab.Pane>
-          <div className={styles.tabContent}>
+          <div className={styles.tabContent1}>
             {imageKeys1.map((imgKey) => (
               <div key={imgKey}>
                 {visita[imgKey] === null ? (
@@ -317,7 +317,7 @@ export function VisitaDetalles(props) {
       menuItem: 'Caseta',
       render: () => (
         <Tab.Pane>
-          <div className={styles.tabContent}>
+          <div className={styles.tabContent2}>
             {imageKeys2.map((imgKey) => (
               <div key={imgKey}>
                 {visita[imgKey] === null ? (

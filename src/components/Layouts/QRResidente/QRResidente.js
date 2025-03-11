@@ -8,12 +8,13 @@ import axios from 'axios'
 import { Image } from 'semantic-ui-react'
 import { useRouter } from 'next/router'
 import { Loading } from '../Loading'
+import { ResidenteQR } from '@/components/Visitas'
 
-export function QRResidente() {
+export function QRResidente(props) {
+
+  const { reload, onReload } = props
 
   const { user } = useAuth()
-
-  const route = useRouter()
 
   const [showQR, setShowQR] = useState(false)
 
@@ -21,14 +22,21 @@ export function QRResidente() {
 
   const [codigoQR, setCodigoQR] = useState(null)
 
-  const [loading, setLoading] = useState(true);  // Estado de carga
-  const [loadingTimeout, setLoadingTimeout] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  const [isExpired, setIsExpired] = useState(false)
+
+  useEffect(() => {
+    if (codigoQR?.toDate) {
+      const today = new Date();
+      const toDate = new Date(codigoQR.toDate);
+      setIsExpired(toDate < today);
+    }
+  }, [codigoQR])
 
   useEffect(() => {
 
-    const timeout = setTimeout(() => {
-      setLoadingTimeout(true);
-    }, 1200)
+    setLoading(true)
 
     if (showQR && user && user.id) {
       (async () => {
@@ -38,20 +46,27 @@ export function QRResidente() {
           setCodigoQR(filteredResidenteQR[0])
         } catch (error) {
           console.error(error)
+        } finally {
+          setLoading(false)
         }
       })()
     } else {
       setCodigoQR(null)
     }
 
-    return () => clearTimeout(timeout)
-
   }, [showQR, user])
 
-  const linkVisitas = () => {
-    route.push('/visitas')
-    setShowQR(false)
-  }
+  const onReloadQR = async () => {
+    try {
+      const res = await axios.get(`/api/visitas/visitas?residente=${user.id}`);
+      const filteredResidenteQR = res.data.filter(residenteQR => residenteQR.tipovisita === 'Residente');
+
+      setCodigoQR(filteredResidenteQR[0]); // Actualiza el QR en tiempo real
+    } catch (error) {
+      console.error('Error al recargar el código QR:', error);
+    }
+  };
+
 
   return (
 
@@ -67,20 +82,25 @@ export function QRResidente() {
 
       <BasicModal title='mi Código QR' show={showQR} onClose={onOpenCloseQR}>
         <IconClose onOpenClose={onOpenCloseQR} />
-        {loading && !loadingTimeout ? (
-          <Loading size={38} loading={2} />
+
+        {loading ? (
+          <Loading size={46} loading={1} />
+        ) : isExpired ? (
+          <div className={styles.h1QRCaducado}>
+            <h1>¡El código QR ha caducado!</h1>
+            <ResidenteQR user={user} reload={reload} onReload={onReload} onReloadQR={onReloadQR} />
+          </div>
+        ) : codigoQR?.qrCode ? (
+          <div className={styles.imgQR}>
+            <Image src={codigoQR.qrCode} />
+          </div>
         ) : (
-          codigoQR && codigoQR.qrCode ? (
-            <div className={styles.imgQR}>
-              <Image src={codigoQR.qrCode} />
-            </div>
-          ) : (
-            <div className={styles.h1QR} onClick={linkVisitas}>
-              <h1>¡ Primero tiene que generar el código QR desde 'Mis visitas' !</h1>
-              <h2>Haga click aquí</h2>
-            </div>
-          )
+          <div className={styles.h1QR}>
+            <h1>¡Primero tiene que generar el código QR!</h1>
+            <ResidenteQR user={user} reload={reload} onReload={onReload} onReloadQR={onReloadQR} />
+          </div>
         )}
+
       </BasicModal>
 
     </>

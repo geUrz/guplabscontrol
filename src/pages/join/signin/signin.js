@@ -129,7 +129,7 @@ export default function Signin() {
                 {errors.password && <Message>{errors.password}</Message>}
               </FormField>
             </FormGroup>
-            {error && <p className={styles.error}>{error}</p>}
+            {error && <Message>{error}</Message>}
             <Button primary type='submit'>
               Iniciar sesión
             </Button>
