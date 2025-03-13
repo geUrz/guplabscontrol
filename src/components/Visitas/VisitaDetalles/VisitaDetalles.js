@@ -1,8 +1,8 @@
-import { IconClose, Confirm, DatosRes, ToastSuccessQR, UploadImg, IconDel } from '@/components/Layouts'
-import { formatDate } from '@/helpers'
+import { IconClose, Confirm, DatosRes, ToastSuccessQR, UploadImg, IconDel, IconEdit } from '@/components/Layouts'
+import { formatDate, getValueOrDefault } from '@/helpers'
 import { BasicModal, ModalImg } from '@/layouts'
 import { FaCheck, FaDownload, FaEdit, FaImage, FaInfoCircle, FaShareAlt, FaTimes, FaTrash } from 'react-icons/fa'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { VisitaEditForm } from '../VisitaEditForm/VisitaEditForm'
 import axios from 'axios'
 import { Tab, Image as ImageSemantic } from 'semantic-ui-react'
@@ -333,6 +333,19 @@ export function VisitaDetalles(props) {
     },
   ]
 
+  const [visitaData, setVisitaData] = useState(visita)
+
+  useEffect(() => {
+    setVisitaData(visita)
+  }, [visita])
+
+  const actualizarVisita = (nuevaData) => {
+    setVisitaData((prevState) => ({
+      ...prevState,
+      ...nuevaData,
+    }))
+  }
+
   return (
     <>
       {showDownQR && <ToastSuccessQR onToastSuccessDownloadQR={onToastSuccessDownloadQR} />}
@@ -344,19 +357,19 @@ export function VisitaDetalles(props) {
           <div className={styles.box1_1}>
             <div>
               <h1>Nombre de la visita</h1>
-              <h2>{visita.visita}</h2>
+              <h2>{getValueOrDefault(visitaData?.visita)}</h2>
             </div>
             <div className={styles.tipoAcc}>
               <h1>Tipo de acceso</h1>
               <div onClick={onOpenCloseTipoAcc}>
-                <h2>{visita.tipoacceso}</h2>
+                <h2>{getValueOrDefault(visitaData?.tipoacceso)}</h2>
                 <FaInfoCircle />
               </div>
             </div>
             <div className={styles.reporta}>
               <h1>Residente</h1>
               <div onClick={onOpenCloseRes}>
-                <h2>{visita.usuario_nombre}</h2>
+                <h2>{getValueOrDefault(visitaData?.usuario_nombre)}</h2>
                 <FaInfoCircle />
               </div>
             </div>
@@ -364,20 +377,20 @@ export function VisitaDetalles(props) {
           <div className={styles.box1_2}>
             <div>
               <h1>Tipo de visita</h1>
-              <h2>{visita.tipovisita}</h2>
+              <h2>{getValueOrDefault(visitaData?.tipovisita)}</h2>
             </div>
             <div>
               <h1>Estatus</h1>
-              <h2>{visita.estado}</h2>
+              <h2>{getValueOrDefault(visitaData?.estado)}</h2>
             </div>
             <div>
               <h1>Autorizó</h1>
-              {visita.autorizo_usuario === undefined || visita.autorizo_nombre === null ?
+              {visitaData?.autorizo_usuario === undefined || visitaData?.autorizo_nombre === null ?
                 <h2>Sin ingresar</h2>
                 :
                 <>
-                  <h2>{visita.autorizo_usuario}</h2>
-                  <h2>{visita.autorizo_nombre}</h2>
+                  <h2>{getValueOrDefault(visitaData?.autorizo_usuario)}</h2>
+                  <h2>{getValueOrDefault(visitaData?.autorizo_nombre)}</h2>
                 </>
               }
             </div>
@@ -393,7 +406,7 @@ export function VisitaDetalles(props) {
 
         <div className={styles.codigo}>
           <h1>Código de acceso</h1>
-          <h2>{visita.codigo}</h2>
+          <h2>{getValueOrDefault(visitaData?.codigo)}</h2>
           {visita.qrCode && (
             <ImageSemantic src={visita.qrCode} />
           )}
@@ -401,9 +414,7 @@ export function VisitaDetalles(props) {
 
         {user && user.isadmin === 'Admin' || user && visita.usuario_id === user.id ? (
           <>
-            <div className={styles.iconEdit}>
-              <FaEdit onClick={onOpenEditVisita} />
-            </div>
+            <IconEdit onOpenEdit={onOpenEditVisita} />
 
             <div className={styles.actionsBottom}>
               <div>
@@ -423,7 +434,7 @@ export function VisitaDetalles(props) {
       </div>
 
       <BasicModal title='Editar visita' show={showEditVisita} onClose={onOpenEditVisita}>
-        <VisitaEditForm reload={reload} onReload={onReload} visita={visita} onOpenEditVisita={onOpenEditVisita} onToastSuccessMod={onToastSuccessMod} />
+        <VisitaEditForm reload={reload} onReload={onReload} visitaData={visitaData} actualizarVisita={actualizarVisita} onOpenEditVisita={onOpenEditVisita} onToastSuccessMod={onToastSuccessMod} />
       </BasicModal>
 
       <BasicModal
@@ -440,16 +451,16 @@ export function VisitaDetalles(props) {
 
         <IconClose onOpenClose={onOpenCloseTipoAcc} />
         <div className={styles.diasMain}>
-          {visita.tipoacceso === 'frecuente' ? (
+          {visitaData?.tipoacceso === 'frecuente' ? (
             <>
-              <h1>{visita.dias}</h1>
+              <h1>{getValueOrDefault(visitaData?.dias)}</h1>
               <h2>Desde</h2>
-              <h3>{formatDate(visita.fromDate)}</h3>
+              <h3>{formatDate(getValueOrDefault(visitaData?.fromDate))}</h3>
               <h2>Hasta</h2>
-              <h3>{formatDate(visita.toDate)}</h3>
+              <h3>{formatDate(getValueOrDefault(visitaData?.toDate))}</h3>
             </>
-          ) : visita.tipoacceso === 'eventual' ? (
-            <h1>{formatDate(visita.date)}</h1>
+          ) : visitaData?.tipoacceso === 'eventual' ? (
+            <h1>{formatDate(getValueOrDefault(visitaData?.date))}</h1>
           ) : null}
         </div>
       </BasicModal>
@@ -457,10 +468,10 @@ export function VisitaDetalles(props) {
 
       <BasicModal title='datos de residente' show={showRes} onClose={onOpenCloseRes}>
         <DatosRes
-          usuario={visita.usuario_nombre}
-          priv={visita.usuario_privada}
-          calle={visita.usuario_calle}
-          casa={visita.usuario_casa}
+          usuario={getValueOrDefault(visitaData?.usuario_nombre)}
+          priv={getValueOrDefault(visitaData?.usuario_privada)}
+          calle={getValueOrDefault(visitaData?.usuario_calle)}
+          casa={getValueOrDefault(visitaData?.usuario_casa)}
           onOpenCloseRes={onOpenCloseRes} />
       </BasicModal>
 

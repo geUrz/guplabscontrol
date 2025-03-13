@@ -1,8 +1,6 @@
-import { Button, Form, FormField, FormGroup, Input, Label, Message } from 'semantic-ui-react'
+import { Button, Form, FormField, FormGroup, Image, Input, Label, Message } from 'semantic-ui-react'
 import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { BasicJoin } from '@/layouts'
-import { FaUserCircle } from 'react-icons/fa'
 import Link from 'next/link'
 import { useRedirectIfAuthenticated } from '@/hooks'
 import styles from './signin.module.css'
@@ -95,15 +93,14 @@ export default function Signin() {
 
   return (
 
-    <BasicJoin relative>
+    <>
 
       <div className={styles.main}>
 
         <div className={styles.boxForm}>
 
-          <div className={styles.user}>
-            <FaUserCircle onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} />
-            <h1>Iniciar sesión</h1>
+          <div className={styles.logo}>
+            <Image src='/img/logo.png' onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} />
           </div>
 
           <Form onSubmit={handleSubmit}>
@@ -147,9 +144,15 @@ export default function Signin() {
 
         </div>
 
+        <div className={styles.footer}>
+          <div className={styles.section}>
+            <h1>2025 © Copyright | ClickNet</h1>
+          </div>
+        </div>
+
       </div>
 
-    </BasicJoin>
+    </>
 
   )
 }

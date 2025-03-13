@@ -12,21 +12,21 @@ registerLocale('es', es)
 
 export function VisitaEditForm(props) {
 
-  const { reload, onReload, visita, onOpenEditVisita, onToastSuccessMod } = props
+  const { reload, onReload, visitaData, actualizarVisita, onOpenEditVisita, onToastSuccessMod } = props
 
   const diasOrdenados = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
 
   const [formData, setFormData] = useState({
-    visita: visita.visita,
-    cel: visita.cel,
-    tipovisita: visita.tipovisita,
-    tipoacceso: visita.tipoacceso,
-    date: visita.date ? new Date(visita.date + 'T00:00:00') : null,
-    fromDate: visita.fromDate ? new Date(visita.fromDate + 'T00:00:00') : null,
-    toDate: visita.toDate ? new Date(visita.toDate + 'T00:00:00') : null,
-    hora: visita.hora,
-    estado: visita.estado,
-    diasSeleccionados: visita.dias ? visita.dias.split(',').map(dia => dia.trim()) : []
+    visita: visitaData.visita,
+    cel: visitaData.cel,
+    tipovisita: visitaData.tipovisita,
+    tipoacceso: visitaData.tipoacceso,
+    date: visitaData.date ? new Date(visitaData.date + 'T00:00:00') : null,
+    fromDate: visitaData.fromDate ? new Date(visitaData.fromDate + 'T00:00:00') : null,
+    toDate: visitaData.toDate ? new Date(visitaData.toDate + 'T00:00:00') : null,
+    hora: visitaData.hora,
+    estado: visitaData.estado,
+    diasSeleccionados: visitaData.dias ? visitaData.dias.split(',').map(dia => dia.trim()) : []
   })
 
   const [errors, setErrors] = useState({})
@@ -87,26 +87,32 @@ export function VisitaEditForm(props) {
   }
 
   const handleSubmit = async (e) => {
-
-    e.preventDefault()
-
+    e.preventDefault();
+  
     if (!validarForm()) {
-      return
+      return;
     }
-
+  
+    // Formatear las fechas
+    const formatDate = (date) => date ? date.toISOString().split('T')[0] : null;
+  
+    const formattedData = {
+      ...formData,
+      date: formatDate(formData.date),
+      fromDate: formatDate(formData.fromDate),
+      toDate: formatDate(formData.toDate),
+      dias: formData.tipoacceso === 'frecuente' ? formData.diasSeleccionados.join(', ') : null
+    };
+  
     try {
-      await axios.put(`/api/visitas/visitas?id=${visita.id}`, {
-        ...formData,
-        date: formData.date ? formData.date.toISOString().split('T')[0] : null,
-        fromDate: formData.fromDate ? formData.fromDate.toISOString().split('T')[0] : null,
-        toDate: formData.toDate ? formData.toDate.toISOString().split('T')[0] : null,
-        dias: formData.tipoacceso === 'frecuente' ? formData.diasSeleccionados.join(', ') : null
-      })
-      onReload()
-      onOpenEditVisita()
-      onToastSuccessMod()
+      await axios.put(`/api/visitas/visitas?id=${visitaData.id}`, formattedData);
+  
+      onReload();
+      actualizarVisita(formattedData);
+      onOpenEditVisita();
+      onToastSuccessMod();
     } catch (error) {
-      console.error('Error actualizando la visita:', error)
+      console.error('Error actualizando la visita:', error);
     }
   }
 

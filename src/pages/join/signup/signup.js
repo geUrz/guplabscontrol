@@ -1,4 +1,4 @@
-import { Button, Dropdown, Form, FormField, FormGroup, Input, Label, Message } from 'semantic-ui-react'
+import { Button, Dropdown, Form, FormField, FormGroup, Image, Input, Label, Message } from 'semantic-ui-react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
@@ -149,14 +149,13 @@ export default function Signup() {
   };
 
   return (
-    <BasicJoin relative>
+
+    <>
+
       <div className={styles.main}>
         <div className={styles.boxForm}>
-          <div className={styles.user}>
-            <div>
-              <FaUserPlus />
-            </div>
-            <h1>Crear usuario</h1>
+          <div className={styles.logo}>
+            <Image src='/img/logo.png' />
           </div>
 
           <Form onSubmit={handleSubmit}>
@@ -210,7 +209,7 @@ export default function Signup() {
                 />
                 {errors.isadmin && <Message negative>{errors.isadmin}</Message>}
               </FormField>
-              
+
               {credentials.isadmin === 'Residente' && (
                 <>
                   <FormField>
@@ -292,7 +291,16 @@ export default function Signup() {
             </Link>
           </div>
         </div>
+
+        <div className={styles.footer}>
+          <div className={styles.section}>
+            <h1>2025 © Copyright | ClickNet</h1>
+          </div>
+        </div>
+
       </div>
-    </BasicJoin>
+
+    </>
+
   )
 }

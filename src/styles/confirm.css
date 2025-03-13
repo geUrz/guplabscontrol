@@ -22,12 +22,16 @@
   justify-content: center;
 }
 
+.ui.button.negative{
+  background-color: var(--clrR0) !important;
+}
+
 .ui.button.negative:hover{
-  background-color: rgb(235, 43, 43) !important;
+  background-color: var(--clrR1) !important;
 }
 
 .ui.button.negative:active, .ui.button.negative:focus{
-  background-color: rgb(243, 51, 51) !important;
+  background-color: var(--clrR2) !important;
 }
 
 .ui.button.secondary{

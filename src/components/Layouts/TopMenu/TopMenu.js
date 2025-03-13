@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext'
+import { Image } from 'semantic-ui-react';
 
 export function TopMenu(props) {
 
@@ -44,7 +45,8 @@ export function TopMenu(props) {
           <FaBell />
           {unreadCount > 0 && <span className={styles.notiCount}>{unreadCount}</span>}
         </Link> */}
-        <div className={styles.h1}>
+        <div className={styles.h1Logo}>
+          <Image src='/img/logomenu.png' />
           <h1>{title}</h1>
         </div>
         <div className={styles.user}>

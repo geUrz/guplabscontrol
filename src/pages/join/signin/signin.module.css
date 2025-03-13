@@ -1,5 +1,5 @@
 .main{
-  padding: 50px 0;
+  margin: 200px 0 0 0;
   width: 100%;
   height: auto;
   display: flex;
@@ -9,8 +9,7 @@
 }
 
 .boxForm{
-  padding: 50px 0;
-  margin-bottom: 30px;
+  padding: 160px 0 50px 0;
   width: 320px;
   height: auto;
   display: flex;
@@ -18,27 +17,21 @@
   align-items: center;
   justify-content: center;
   box-shadow: rgba(22, 22, 22, 0.2) 0px 8px 24px;
+  position: relative;
 }
 
-.user{
-  margin-bottom: 30px;
+.logo{
   width: 100%;
   height: auto;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  top: -60px;
 }
 
-.user svg, .user path{
-  font-size: 100px;
-  color: var(--clrGR00);
-}
-
-.user h1{
-  margin-top: 10px;
-  font-size: 18px;
-  color: black;
+.logo img{
+  height: 160px;
 }
 
 .link{
@@ -58,6 +51,30 @@
 .label{
   color: var(--clrGR0) !important;
   background-color: azure !important;
+}
+
+.footer{
+  margin-top: 50px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer div{
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer h1{
+  font-size: 14px;
+  color: var(--clrBL0);
+  font-weight: 600 !important;
 }
 
 @media screen and (min-width: 768px) {

@@ -76,7 +76,7 @@ export default function Visitas() {
 
     <ProtectedRoute>
 
-      <BasicLayout title='Visitas' relative reload={reload} onReload={onReload}>
+      <BasicLayout title='mis visitas' relative reload={reload} onReload={onReload}>
 
         {toastSuccess && <ToastSuccess contain='Creada exitosamente' onClose={() => setToastSuccess(false)} />}
 
