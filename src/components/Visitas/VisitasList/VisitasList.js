@@ -10,11 +10,10 @@ import styles from './VisitasList.module.css'
 
 export function VisitasList(props) {
 
-  const { user, loading, reload, onReload, visitas, onToastSuccessVisita, onToastSuccessMod, onToastSuccessDel } = props
+  const { user, reload, onReload, visitas, onToastSuccessVisita, onToastSuccessMod, onToastSuccessDel } = props
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [visitaSeleccionada, setVisitaSeleccionada] = useState(null)
-  const [showLoading, setShowLoading] = useState(true)
 
   const onOpenDetalles = (visita) => {
     setVisitaSeleccionada(visita)
@@ -26,23 +25,11 @@ export function VisitasList(props) {
     setShowDetalles(false)
   }
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoading(false)
-    }, 800)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (loading) {
-    return <Loading size={45} loading={0} />
-  }
-
   return (
 
     <>
 
-      {showLoading ? (
+      {!visitas ? (
         <Loading size={45} loading={1} />
       ) : (
         size(visitas) === 0 ? (
@@ -86,7 +73,6 @@ export function VisitasList(props) {
             reload={reload}
             onReload={onReload}
             user={user}
-            loading={loading}
             visita={visitaSeleccionada}
             onCloseDetalles={onCloseDetalles}
             onToastSuccessVisita={onToastSuccessVisita}

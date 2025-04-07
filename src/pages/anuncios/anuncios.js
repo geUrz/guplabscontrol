@@ -1,8 +1,8 @@
 import { BasicLayout, BasicModal } from '@/layouts'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
-import { Add, Loading, ToastDelete, ToastSuccess } from '@/components/Layouts'
+import { Add, Loading, Title, ToastDelete, ToastSuccess } from '@/components/Layouts'
 import { useAuth } from '@/contexts/AuthContext'
 import styles from './anuncios.module.css'
 import { AnunciosList, AnuncioForm, SearchAnuncios, AnunciosListSearch } from '@/components/Anuncios'
@@ -66,15 +66,31 @@ export default function Anuncios() {
     }, 3000)
   }
 
+  const permissions = useMemo(() => {
+
+    if(!user) return {}
+
+    return {
+      showAdd: ['Admin', 'ComitéSU', 'Comité'].includes(user?.isadmin)
+    }
+
+  }, [user])
+
   if (loading) {
-    return <Loading size={45} loading={0} />
+    return <Loading size={45} loading={'L'} />
   }
 
   return (
     
     <ProtectedRoute>
 
-      <BasicLayout title='anuncios' relative onReload={onReload}>
+      <BasicLayout relative onReload={onReload}>
+
+        <Title title='anuncios' />
+
+        {permissions.showAdd && (
+          <Add onOpenClose={onOpenCloseForm} />
+        )}
 
         {toastSuccess && <ToastSuccess contain='Creado exitosamente' onClose={() => setToastSuccess(false)} />}
 
@@ -104,9 +120,7 @@ export default function Anuncios() {
         ''
       )}
 
-        <AnunciosList reload={reload} onReload={onReload} anuncios={anuncios} onToastSuccessMod={onToastSuccessMod} onToastSuccessDel={onToastSuccessDel} />
-
-        <Add onOpenClose={onOpenCloseForm} />
+      <AnunciosList reload={reload} onReload={onReload} anuncios={anuncios} onToastSuccessMod={onToastSuccessMod} onToastSuccessDel={onToastSuccessDel} />
 
       </BasicLayout>
 

@@ -1,0 +1,35 @@
+.main{
+  padding: 10px 0;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.section div{
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.section svg, .section path{
+  font-size: 20px;
+  color: var(--clrGR00);
+  cursor: pointer;
+}
+
+.section div:hover svg, .section div:hover path{
+  color: var(--clrGR0);
+}
+
+.section div:active svg, .section div:active path{
+  color: var(--clrGR1);
+}

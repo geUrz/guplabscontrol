@@ -1,22 +1,37 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import { Form, Button, Input, Label, FormGroup, FormField, Message, Dropdown } from 'semantic-ui-react'
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import styles from './UsuarioEditForm.module.css'
+import { BasicModal } from '@/layouts'
+import { ProtectedMessage } from '@/components/Layouts'
+import { useAuth } from '@/contexts/AuthContext'
 
 export function UsuarioEditForm(props) {
-  const { reload, onReload, usuario, onOpenClose, onToastSuccessUsuarioMod } = props
+  const { reload, onReload, usuarioData, actualizarUsuario, onOpenClose, onToastSuccessUsuarioMod } = props
+
+  const {user, logout} = useAuth()
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+  const [showError, setShowError] = useState(false)
+
+  const onCloseError = () => {
+    setShowError(false)
+    onOpenCloseForm()
+  }
 
   const [formData, setFormData] = useState({
-    newNombre: usuario.nombre || '',
-    newUsuario: usuario.usuario || '',
-    newResidencial: usuario.residencial_id || '',
-    newIsAdmin: usuario.isadmin || '',
-    newIsActive: usuario.isactive ? 1 : 0,
-    newEmail: usuario.email || '',
-    newPassword: '',
-    confirmPassword: ''
-  });
+    newNombre: usuarioData.nombre || '',
+    newUsuario: usuarioData.usuario || '',
+    newResidencial: usuarioData.residencial_id || '',
+    newIsAdmin: usuarioData.isadmin || '',
+    newPrivada: usuarioData.privada || '',
+    newCalle: usuarioData.calle || '',
+    newCasa: usuarioData.casa || '', 
+    newEmail: usuarioData.email || '',
+    newIsActive: usuarioData.isactive ? 1 : 0,
+  })
 
   const [residenciales, setResidenciales] = useState([])
   const [error, setError] = useState(null)
@@ -43,13 +58,9 @@ export function UsuarioEditForm(props) {
 
     if (formData.newIsActive === undefined || formData.newIsActive === '') {
       newErrors.newIsActive = 'El campo es requerido';
-    }    
-
-    if (!formData.newEmail) {
-      newErrors.newEmail = 'El campo es requerido'
     }
 
-    setErrors(newErrors);
+    setErrors(newErrors)
     return Object.keys(newErrors).length === 0;
   }
 
@@ -57,11 +68,14 @@ export function UsuarioEditForm(props) {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
-    });
+    })
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    setIsLoading(true)
+    setErrorMessage("")
 
     if (!validarFormUser()) {
       return
@@ -69,37 +83,47 @@ export function UsuarioEditForm(props) {
 
     setError(null)
 
-    if (formData.newPassword && formData.newPassword !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden')
+    if(user.usuario === 'admin' && user.id === usuarioData.id) {
+      logout()
       return
     }
 
     try {
-      await axios.put(`/api/usuarios/usuarios?id=${usuario.id}`, {
+      await axios.put(`/api/usuarios/usuarios?id=${usuarioData.id}`, {
         nombre: formData.newNombre,
         usuario: formData.newUsuario,
-        email: formData.newEmail,
         isadmin: formData.newIsAdmin,
+        privada: formData.newPrivada,
+        calle: formData.newCalle,
+        casa: formData.newCasa, 
+        email: formData.newEmail,
         isactive: formData.newIsActive,
-        residencial_id: formData.newResidencial, 
-        password: formData.newPassword,
+        residencial_id: formData.newResidencial,
       })
 
       onReload()
+
+      const response = await axios.get(`/api/usuarios/usuarios?id=${usuarioData.id}`)
+      actualizarUsuario(response.data)
+
       onOpenClose()
       onToastSuccessUsuarioMod()
 
     } catch (error) {
-      console.error('Error al actualizar el perfil:', error);
-      if (error.response && error.response.data && error.response.data.error) {
-        setError(error.response.data.error);
+      setIsLoading(false)
+
+      if (error.response) {
+        setErrorMessage(error.response.data.error || "Hubo un problema al crear la visita.")
       } else {
-        setError('Ocurrió un error inesperado');
+        setErrorMessage("No se pudo conectar al servidor.")
       }
+
+      setShowError(true)
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  // Cargar los residenciales al montar el componente
   useEffect(() => {
     const fetchResidenciales = async () => {
       try {
@@ -120,13 +144,29 @@ export function UsuarioEditForm(props) {
 
   const opcionesNivel = [
     { key: 1, text: 'Admin', value: 'Admin' },
-    { key: 2, text: 'Técnico', value: 'Tecnico' }
+    { key: 2, text: 'ComitéSU', value: 'ComitéSU' },
+    { key: 3, text: 'Comité', value: 'Comité' },
+    { key: 4, text: 'Residente', value: 'Residente' },
+    { key: 5, text: 'Caseta', value: 'Caseta' },
+    { key: 6, text: 'Técnico', value: 'Técnico' }
   ]
 
   const opcionesIsActive = [
     { key: 1, text: 'Activo', value: 1 },
     { key: 2, text: 'Inactivo', value: 0 }
   ]
+
+  const permissions = useMemo(() => {
+
+    if (!formData) return {}
+
+    return {
+
+      showDatosResidente: ['ComitéSU', 'Comité', 'Caseta', 'Residente'].includes(formData.newIsAdmin)
+
+    }
+
+  }, [formData])
 
   return (
     <>
@@ -178,8 +218,54 @@ export function UsuarioEditForm(props) {
             />
             {errors.newIsAdmin && <Message negative>{errors.newIsAdmin}</Message>}
           </FormField>
+
+          {permissions.showDatosResidente &&
+
+            <>
+
+              <FormField>
+                <Label>Privada</Label>
+                <Input
+                  name='newPrivada'
+                  type='text'
+                  value={formData.newPrivada}
+                  onChange={handleChange}
+                />
+              </FormField>
+              <FormField>
+                <Label>Calle</Label>
+                <Input
+                  name='newCalle'
+                  type='text'
+                  value={formData.newCalle}
+                  onChange={handleChange}
+                />
+              </FormField>
+              <FormField>
+                <Label>Casa</Label>
+                <Input
+                  name='newCasa'
+                  type='text'
+                  value={formData.newCasa}
+                  onChange={handleChange}
+                />
+              </FormField>
+
+            </>
+
+          } 
+
+          <FormField>
+            <Label>Correo</Label>
+            <Input
+              name='newEmail'
+              type='email'
+              value={formData.newEmail}
+              onChange={handleChange}
+            />
+          </FormField>
           <FormField error={!!errors.newIsActive}>
-            <Label>isActive</Label>
+            <Label>Estatus</Label>
             <Dropdown
               placeholder='Selecciona una opción'
               fluid
@@ -190,38 +276,15 @@ export function UsuarioEditForm(props) {
             />
             {errors.newIsActive && <Message negative>{errors.newIsActive}</Message>}
           </FormField>
-          <FormField error={!!errors.newEmail}>
-            <Label>Correo</Label>
-            <Input
-              name='newEmail'
-              type='email'
-              value={formData.newEmail}
-              onChange={handleChange}
-            />
-            {errors.newEmail && <Message negative>{errors.newEmail}</Message>}
-          </FormField>
-          <FormField>
-            <Label>Nueva contraseña</Label>
-            <Input
-              name='newPassword'
-              type='password'
-              value={formData.newPassword}
-              onChange={handleChange}
-            />
-          </FormField>
-          <FormField>
-            <Label>Confirmar nueva contraseña</Label>
-            <Input
-              name='confirmPassword'
-              type='password'
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-          </FormField>
         </FormGroup>
         {error && <p className={styles.error}>{error}</p>}
-        <Button primary onClick={handleSubmit}>Guardar</Button>
+        <Button primary loading={isLoading} onClick={handleSubmit}>Guardar</Button>
       </Form>
+
+      <BasicModal show={showError} onClose={onCloseError} >
+        <ProtectedMessage errorMessage={errorMessage} onCloseError={onCloseError} />
+      </BasicModal>
+
     </>
   )
 }

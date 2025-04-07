@@ -1,12 +1,13 @@
 import { BasicLayout, BasicModal } from '@/layouts'
 import { FaEdit, FaUser } from 'react-icons/fa'
 import { ModUsuarioForm, ModResidenteForm } from '@/components/Cuenta'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
-import { Loading } from '@/components/Layouts'
+import { IconEdit, Loading, ToastSuccess } from '@/components/Layouts'
 import { Button } from 'semantic-ui-react'
 import styles from './cuenta.module.css'
+import { getValueOrDefault } from '@/helpers'
 
 export default function Cuenta() {
 
@@ -19,9 +20,29 @@ export default function Cuenta() {
   const onOpenClose = () => setShow((prevState) => !prevState)
 
   const { user, loading, logout } = useAuth()
-  
+
+  const [toastSuccessMod, setToastSuccessMod] = useState(false)
+
+  const onToastSuccessMod = () => {
+    setToastSuccessMod(true)
+    setTimeout(() => {
+      setToastSuccessMod(false)
+    }, 3000)
+  }
+
+  const permissions = useMemo(() => {
+
+    if (!user) return {}
+
+    return {
+      showDatosAdmin: ['Admin', 'Técnico', 'Caseta'].includes(user?.isadmin),
+      showDatosResidente: ['ComitéSU', 'Comité', 'Residente'].includes(user?.isadmin)
+    }
+
+  }, [user])
+
   if (loading || !user) {
-    return <Loading size={45} loading={0} />
+    return <Loading size={45} loading={'L'} />
   }
 
   return (
@@ -30,79 +51,75 @@ export default function Cuenta() {
 
       <BasicLayout title='cuenta' relative onReload={onReload}>
 
+        {toastSuccessMod && <ToastSuccess contain='Modificado exitosamente' onClose={() => setToastSuccessMod(false)} />}
+
+
         <div className={styles.main}>
           <div className={styles.section}>
-            <FaUser />
+            <div className={styles.iconUser}>
+              <FaUser />
+            </div>
 
-            {!user ? (
-              ''
-            ) : (
-              user.isadmin === 'Admin' || user.isadmin === 'Técnico' || user.isadmin === 'Comité' || user.isadmin === 'Caseta' ? (
-                <>
+            <h1>{user.usuario}</h1>
 
-                  <h1>{user.usuario}</h1>
-                  <div>
-                    <h1>Nombre:</h1>
-                    <h2>{user.nombre}</h2>
-                  </div>
-                  <div>
-                    <h1>Correo:</h1>
-                    <h2>{user.email}</h2>
-                  </div>
-                  <div>
-                    <h1>Residencial:</h1>
-                    <h2>{user.nombre_residencial}</h2>
-                  </div>
-                  <div>
-                    <h1>Nivel:</h1>
-                    <h2>{user.isadmin}</h2>
-                  </div>
+            {permissions.showDatosAdmin &&
+              <>
+                <div>
+                  <h1>Nombre:</h1>
+                  <h2>{getValueOrDefault(user.nombre)}</h2>
+                </div>
+                <div>
+                  <h1>Correo:</h1>
+                  <h2>{getValueOrDefault(user.email)}</h2>
+                </div>
+                <div>
+                  <h1>Residencial:</h1>
+                  <h2>{getValueOrDefault(user.nombre_residencial)}</h2>
+                </div>
+                <div>
+                  <h1>Nivel:</h1>
+                  <h2>{getValueOrDefault(user.isadmin)}</h2>
+                </div>
+              </>
+            }
 
-                </>
-              ) : (
-                user.isadmin === 'Residente' ? (
-                  <>
-
-                    <h1>{user.usuario}</h1>
-                    <div>
-                      <h1>Nombre:</h1>
-                      <h2>{user.nombre}</h2>
-                    </div>
-                    <div>
-                      <h1>Privada:</h1>
-                      <h2>{user.privada}</h2>
-                    </div>
-                    <div>
-                      <h1>Calle:</h1>
-                      <h2>{user.calle}</h2>
-                    </div>
-                    <div>
-                      <h1>Casa:</h1>
-                      <h2>#{user.casa}</h2>
-                    </div>
-                    <div>
-                      <h1>Correo:</h1>
-                      <h2>{user.email}</h2>
-                    </div>
-                    <div>
-                      <h1>Residencial:</h1>
-                      <h2>{user.nombre_residencial}</h2>
-                    </div>
-                    <div>
-                      <h1>Nivel:</h1>
-                      <h2>{user.isadmin}</h2>
-                    </div>
-
-                  </>
-                ) : null
-              )
-            )}
+            {permissions.showDatosResidente &&
+              <>
+                <div>
+                  <h1>Nombre:</h1>
+                  <h2>{getValueOrDefault(user.nombre)}</h2>
+                </div>
+                <div>
+                  <h1>Privada:</h1>
+                  <h2>{getValueOrDefault(user.privada)}</h2>
+                </div>
+                <div>
+                  <h1>Calle:</h1>
+                  <h2>{getValueOrDefault(user.calle)}</h2>
+                </div>
+                <div>
+                  <h1>Casa:</h1>
+                  <h2>#{getValueOrDefault(user.casa)}</h2>
+                </div>
+                <div>
+                  <h1>Correo:</h1>
+                  <h2>{getValueOrDefault(user.email)}</h2>
+                </div>
+                <div>
+                  <h1>Residencial:</h1>
+                  <h2>{getValueOrDefault(user.nombre_residencial)}</h2>
+                </div>
+                <div>
+                  <h1>Nivel:</h1>
+                  <h2>{getValueOrDefault(user.isadmin)}</h2>
+                </div>
+              </>
+            }
 
             <div className={styles.iconEdit}>
-              <div onClick={onOpenClose}>
-                <FaEdit />
-              </div>
+              <IconEdit onOpenEdit={onOpenClose} />
             </div>
+
             <Button negative onClick={logout}>
               Cerrar sesión
             </Button>
@@ -110,21 +127,21 @@ export default function Cuenta() {
 
         </div>
 
-
-        {user.isadmin === 'Admin' || user.isadmin === 'Comité' || user.isadmin === 'Técnico' || user.isadmin === 'Caseta' ? (
+        {permissions.showDatosAdmin &&
           <BasicModal title='Modificar usuario' show={show} onClose={onOpenClose}>
-            <ModUsuarioForm user={user} onOpenClose={onOpenClose} />
+            <ModUsuarioForm user={user} onOpenClose={onOpenClose} onToastSuccessMod={onToastSuccessMod} />
           </BasicModal>
-        ) : user.isadmin === 'Residente' ? (
-          <BasicModal title='Modificar residente' show={show} onClose={onOpenClose}>
-            <ModResidenteForm user={user} onOpenClose={onOpenClose} />
-          </BasicModal>
-        ) : null}
+        }
 
+        {permissions.showDatosResidente &&
+          <BasicModal title='Modificar residente' show={show} onClose={onOpenClose}>
+            <ModResidenteForm user={user} onOpenClose={onOpenClose} onToastSuccessMod={onToastSuccessMod} />
+          </BasicModal>
+        }
 
       </BasicLayout>
 
-    </ProtectedRoute>
+    </ProtectedRoute >
 
   )
 }

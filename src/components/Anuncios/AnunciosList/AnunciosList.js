@@ -3,8 +3,7 @@ import { map, size } from 'lodash'
 import { FaBullhorn } from 'react-icons/fa'
 import { BasicModal } from '@/layouts'
 import { AnuncioDetalles } from '../AnuncioDetalles'
-import { useEffect, useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useState } from 'react'
 import { convertTo12HourFormat, formatDate } from '@/helpers'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './AnunciosList.module.css'
@@ -13,11 +12,8 @@ export function AnunciosList(props) {
 
   const { reload, onReload, anuncios, onToastSuccessMod, onToastSuccessDel } = props
 
-  const { loading } = useAuth()
-
   const [showDetalles, setShowDetalles] = useState(false)
   const [anuncioseleccionada, setAnuncioSeleccionada] = useState(null)
-  const [showLoading, setShowLoading] = useState(true)
 
   const onOpenDetalles = (anuncio) => {
     setAnuncioSeleccionada(anuncio)
@@ -29,23 +25,11 @@ export function AnunciosList(props) {
     setShowDetalles(false)
   }
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoading(false)
-    }, 800) 
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (loading) {
-    return <Loading size={45} loading={0} />
-  }
-
   return (
 
     <>
 
-      {showLoading ? (
+      {!anuncios ? (
         <Loading size={45} loading={1} />
       ) : (
         size(anuncios) === 0 ? (

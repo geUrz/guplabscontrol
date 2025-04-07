@@ -78,3 +78,28 @@ export function formatDateVT(dateString) {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 }
+
+export const formatDateLong = (fecha) => {
+  const date = new Date(fecha);
+  
+  // Obtener los nombres de los días y meses en español
+  const diasSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+  const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
+                 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+  // Obtener los componentes de la fecha
+  const diaSemana = diasSemana[date.getDay()];
+  const dia = date.getDate();
+  const mes = meses[date.getMonth()];
+  const año = date.getFullYear();
+
+  // Obtener la hora en formato 12 horas y AM/PM
+  let hora = date.getHours();
+  const minutos = date.getMinutes().toString().padStart(2, '0'); // Asegurar que los minutos tengan dos dígitos
+  const ampm = hora >= 12 ? 'PM' : 'AM';
+  hora = hora % 12;
+  hora = hora ? hora : 12; // Si la hora es 0 (12 AM), la convertimos a 12
+
+  // Formatear la fecha con la hora
+  return `${diaSemana} ${dia} de ${mes} del ${año}, ${hora}:${minutos} ${ampm}`;
+};

@@ -203,7 +203,11 @@ export function ResidenteForm(props) {
                   selection
                   options={[
                     { key: 'Admin', text: 'Admin', value: 'Admin' },
-                    { key: 'Técnico', text: 'Técnico', value: 'Técnico' },
+                    { key: 'ComitéSU', text: 'ComitéSU', value: 'ComitéSU' },
+                    { key: 'Comité', text: 'Comité', value: 'Comité' },
+                    { key: 'Residente', text: 'Residente', value: 'Residente' },
+                    { key: 'Caseta', text: 'Caseta', value: 'Caseta' },
+                    { key: 'Técnico', text: 'Técnico', value: 'Técnico' }
                   ]}
                   name='isadmin'
                   value={credentials.isadmin}

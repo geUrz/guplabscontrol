@@ -6,9 +6,7 @@ import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext'
 import { Image } from 'semantic-ui-react';
 
-export function TopMenu(props) {
-
-  const { title } = props
+export function TopMenu() {
 
   const { user } = useAuth()
 
@@ -45,9 +43,10 @@ export function TopMenu(props) {
           <FaBell />
           {unreadCount > 0 && <span className={styles.notiCount}>{unreadCount}</span>}
         </Link> */}
-        <div className={styles.h1Logo}>
-          <Image src='/img/logomenu.png' />
-          <h1>{title}</h1>
+        <div className={styles.logo}>
+          <Link href='/'>
+            <Image src='/img/logomenu.png' />
+          </Link>
         </div>
         <div className={styles.user}>
           <Link href='/cuenta'>

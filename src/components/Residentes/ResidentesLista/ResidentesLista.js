@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import styles from './ResidentesLista.module.css'
 import { ListEmpty, Loading } from '@/components/Layouts'
 import { map, size } from 'lodash'
@@ -12,7 +12,6 @@ export function ResidentesLista(props) {
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [residenteSeleccionado, setResidenteSeleccionado] = useState(null)
-  const [showLoading, setShowLoading] = useState(false)
 
   const onOpenDetalles = (residente) => {
     setResidenteSeleccionado(residente)
@@ -24,19 +23,11 @@ export function ResidentesLista(props) {
     setShowDetalles(false)
   }
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoading(false)
-    }, 800)
-
-    return () => clearTimeout(timer)
-  }, [])
-
   return (
 
     <>
 
-      {showLoading ? (
+      {!residentes ? (
         <Loading size={45} loading={1} />
       ) : (
         size(residentes) === 0 ? (

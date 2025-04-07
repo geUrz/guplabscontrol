@@ -3,8 +3,7 @@ import { map, size } from 'lodash'
 import { FaUserMd } from 'react-icons/fa'
 import { BasicModal } from '@/layouts'
 import { VisitaProvDetalles } from '../VisitaProvDetalles'
-import { useEffect, useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useState } from 'react'
 import { formatDateVT } from '@/helpers'
 import { getStatusClassVisita } from '@/helpers/getStatusClass/getStatusClass'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -14,11 +13,8 @@ export function VisitaProvsList(props) {
 
   const { reload, onReload, visitaprovs, onToastSuccessMod, onToastSuccessDel } = props
 
-  const { loading } = useAuth()
-  
   const [showDetalles, setShowDetalles] = useState(false)
   const [visitaprovSeleccionada, setVisitaprovSeleccionada] = useState(null)
-  const [showLoading, setShowLoading] = useState(true)
 
   const onOpenDetalles = (visitaprov) => {
     setVisitaprovSeleccionada(visitaprov)
@@ -30,23 +26,11 @@ export function VisitaProvsList(props) {
     setShowDetalles(false)
   }
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoading(false)
-    }, 800)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (loading) {
-    return <Loading size={45} loading={0} />
-  }
-
   return (
 
     <>
 
-      {showLoading ? (
+      {!visitaprovs ? (
         <Loading size={45} loading={1} />
       ) : (
         size(visitaprovs) === 0 ? (

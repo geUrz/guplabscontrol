@@ -13,7 +13,6 @@ export function AnunciosListSearch(props) {
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [anuncioSeleccionado, setAnuncioSeleccionado] = useState(null)
-  const [showLoading, setShowLoading] = useState(true)
 
   const onOpenDetalles = (anuncio) => {
     setAnuncioSeleccionado(anuncio)
@@ -25,19 +24,11 @@ export function AnunciosListSearch(props) {
     setShowDetalles(false)
   }
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoading(false)
-    }, 800)
-
-    return () => clearTimeout(timer)
-  }, [])
-
   return (
 
     <>
 
-      {showLoading ?
+      {!anuncios ?
         <Loading size={45} loading={1} /> :
         <div className={styles.main}>
           {map(anuncios, (anuncio) => (

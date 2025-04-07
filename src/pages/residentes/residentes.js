@@ -1,10 +1,10 @@
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 import styles from './residentes.module.css'
 import { BasicLayout, BasicModal } from '@/layouts'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
-import { Add, Loading, ToastSuccess } from '@/components/Layouts'
+import { Add, Loading, Title, ToastSuccess } from '@/components/Layouts'
 import { ResidenteForm, ResidentesLista, ResidentesListSearch, SearchResidentes } from '@/components/Residentes'
 import { FaSearch } from 'react-icons/fa'
 
@@ -48,7 +48,7 @@ export default function Residentes() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get('/api/usuarios/usuarios?isadmin=Residente, Caseta, Comité')
+        const res = await axios.get('/api/usuarios/usuarios?isadmin=Residente, Caseta, ComitéSU, Comité')
         setResidentes(res.data)
       } catch (error) {
         console.error(error)
@@ -56,25 +56,43 @@ export default function Residentes() {
     })()
   }, [reload])
 
+  const permissions = useMemo(() => {
+
+    if(!user) return {}
+
+    return{
+      showAdmin: ['Admin'].includes(user?.isadmin)
+    }
+
+  }, [user])
+
   if (loading) {
-    return <Loading size={45} loading={0} />
+    return <Loading size={45} loading={'L'} />
   }
 
   return (
 
     <ProtectedRoute>
 
-      <BasicLayout title='residentes' relative onReload={onReload}>
+      <BasicLayout relative onReload={onReload}>
+
+        <Title title='residentes' />
 
         {toastSuccess && <ToastSuccess contain='Creado exitosamente' onClose={() => setToastSuccess(false)} />}
 
         {toastSuccessMod && <ToastSuccess contain='Modificado exitosamente' onClose={() => setToastSuccessMod(false)} />}
 
+        {permissions.showAdmin &&
+
+          <Add onOpenClose={onOpenCloseForm} />
+
+        }
+
         {!search ? (
           ''
         ) : (
           <div className={styles.searchMain}>
-            <SearchResidentes onResults={setResultados} reload={reload} onReload={onReload} onToastSuccessMod={onToastSuccessMod} onOpenCloseSearch={onOpenCloseSearch} />
+            <SearchResidentes user={user} onResults={setResultados} reload={reload} onReload={onReload} onToastSuccessMod={onToastSuccessMod} onOpenCloseSearch={onOpenCloseSearch} />
             {resultados.length > 0 && (
               <ResidentesListSearch visitas={resultados} reload={reload} onReload={onReload} />
             )}
@@ -91,11 +109,6 @@ export default function Residentes() {
         ) : (
           ''
         )}
-
-        {user.isadmin === 'Admin' ? (
-          <Add onOpenClose={onOpenCloseForm} />
-        ) : null
-        }
 
         <ResidentesLista reload={reload} onReload={onReload} residentes={residentes} onToastSuccessMod={onToastSuccessMod} />
 

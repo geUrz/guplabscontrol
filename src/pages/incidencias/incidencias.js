@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { IncidenciasList, IncidenciaForm, SearchIncidencia } from '@/components/Incidencias'
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
-import { Add, Loading, ToastDelete, ToastSuccess } from '@/components/Layouts'
+import { Add, Loading, Title, ToastDelete, ToastSuccess } from '@/components/Layouts'
 import { useAuth } from '@/contexts/AuthContext'
 import styles from './incidencias.module.css'
 import { FaSearch } from 'react-icons/fa'
@@ -67,14 +67,16 @@ export default function Incidencias() {
   }
 
   if (loading) {
-    return <Loading size={45} loading={0} />
+    return <Loading size={45} loading={'L'} />
   }
 
   return (
 
     <ProtectedRoute>
 
-      <BasicLayout title='incidencias' relative onReload={onReload}>
+      <BasicLayout relative onReload={onReload}>
+
+        <Title title='incidencias' />
 
         {toastSuccess && <ToastSuccess contain='Creada exitosamente' onClose={() => setToastSuccess(false)} />}
 
@@ -104,14 +106,14 @@ export default function Incidencias() {
         ''
       )}
 
-        <IncidenciasList reload={reload} onReload={onReload} incidencias={incidencias} onToastSuccessMod={onToastSuccessMod} onToastSuccessDel={onToastSuccessDel} />
+        <IncidenciasList user={user} reload={reload} onReload={onReload} incidencias={incidencias} onToastSuccessMod={onToastSuccessMod} onToastSuccessDel={onToastSuccessDel} />
 
         <Add onOpenClose={onOpenCloseForm} />
 
       </BasicLayout>
 
       <BasicModal title='crear incidencia' show={openForm} onClose={onOpenCloseForm}>
-        <IncidenciaForm reload={reload} onReload={onReload} onOpenCloseForm={onOpenCloseForm} onToastSuccess={onToastSuccess} />
+        <IncidenciaForm user={user} reload={reload} onReload={onReload} onOpenCloseForm={onOpenCloseForm} onToastSuccess={onToastSuccess} />
       </BasicModal>
 
     </ProtectedRoute>

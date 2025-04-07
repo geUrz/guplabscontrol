@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Add, Loading, ToastDelete, ToastSuccess } from '@/components/Layouts'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Add, Loading, Title, ToastDelete, ToastSuccess } from '@/components/Layouts'
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 import { SearchVisitaProv, VisitaProvForm, VisitaProvsList, VisitaProvsListSearch } from '@/components/VisitaProvs'
 import { useAuth } from '@/contexts/AuthContext'
@@ -66,15 +66,31 @@ export default function Visitaprovedores() {
     }, 3000)
   }
 
+  const permissions = useMemo(() => {
+
+    if(!user) return {}
+
+    return{
+      showAdd: user?.isadmin !== 'Residente'
+    }
+
+  }, [user])
+
   if (loading) {
-    return <Loading size={45} loading={0} />
+    return <Loading size={45} loading={'L'} />
   }
 
   return (
 
     <ProtectedRoute>
 
-      <BasicLayout title='visita proveedores' relative onReload={onReload}>
+      <BasicLayout relative onReload={onReload}>
+
+        <Title title='visita de proveedores' />
+
+        {permissions.showAdd && (
+          <Add onOpenClose={onOpenCloseForm} />
+        )}
 
         {toastSuccess && <ToastSuccess contain='Creado exitosamente' onClose={() => setToastSuccess(false)} />}
 
@@ -105,12 +121,6 @@ export default function Visitaprovedores() {
         )}
 
         <VisitaProvsList reload={reload} onReload={onReload} visitaprovs={visitaprovs} onToastSuccessMod={onToastSuccessMod} onToastSuccessDel={onToastSuccessDel} />
-
-        {user && user.isadmin === 'Admin' || user && user.isadmin === 'Caseta' || user && user.isadmin === 'Comité' ? (
-          <Add onOpenClose={onOpenCloseForm} />
-        ) : (
-          ''
-        )}
 
       </BasicLayout>
 

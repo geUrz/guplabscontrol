@@ -1,29 +1,58 @@
-import { IconClose } from '@/components/Layouts';
+import { IconClose, IconEdit, IconKey } from '@/components/Layouts';
 import { BasicModal } from '@/layouts';
-import { FaEdit } from 'react-icons/fa';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import styles from './UsuarioDetalles.module.css';
-import { ResidenteEditForm } from '../ResidenteEditForm';
 import { UsuarioEditForm } from '../UsuarioEditForm';
+import { EditPass } from '../../Layouts/EditPass';
+import { getValueOrDefault } from '@/helpers';
 
 export function UsuarioDetalles(props) {
 
   const { reload, onReload, usuario, onOpenCloseDetalles, onToastSuccessUsuarioMod } = props
 
-  const { user } = useAuth()
-
   const [show, setShow] = useState(false)
 
   const onOpenClose = () => setShow((prevState) => !prevState)
 
+  const [showEditPass, setShowEditPass] = useState(false)
+
+  const onOpenCloseEditPass = () => setShowEditPass((prevState) => !prevState)
+
+  const [usuarioData, setUsuarioData] = useState(usuario)
+
+  useEffect(() => {
+    setUsuarioData(usuario)
+  }, [usuario])
+
+  const actualizarUsuario = (nuevaData) => {
+    setUsuarioData((prevState) => ({
+      ...prevState,
+      ...nuevaData,
+    }));
+  }
+
   let isActive = ''
 
-  if (usuario.isactive === 1) {
-      isActive = 'Activo'
+  if (usuarioData.isactive === 1) {
+    isActive = 'Activo'
   } else {
-      isActive = 'Inactivo'
+    isActive = 'Inactivo'
   }
+
+  const permissions = useMemo(() => {
+
+    if (!usuario) return {}
+
+    return {
+
+      showAdmin: ['Admin'].includes(usuario.isadmin),
+      showDatosAdmin: ['Admin', 'Técnico'].includes(usuario.isadmin),
+      showDatosResidente: ['ComitéSU', 'Comité', 'Caseta'].includes(usuario.isadmin)
+
+    }
+
+  }, [usuario])
 
   return (
     <>
@@ -34,27 +63,27 @@ export function UsuarioDetalles(props) {
           <div className={styles.box1_1}>
             <div>
               <h1>Nombre</h1>
-              <h2>{usuario.nombre}</h2>
+              <h2>{usuarioData?.nombre}</h2>
             </div>
             <div>
               <h1>Usuario</h1>
-              <h2>{usuario.usuario}</h2>
+              <h2>{usuarioData?.usuario}</h2>
             </div>
-            {usuario.isadmin === 'Residente' ?
+            {permissions.showDatosResidente &&
               <>
                 <div>
                   <h1>Privada</h1>
-                  <h2>{usuario.privada}</h2>
+                  <h2>{getValueOrDefault(usuarioData?.privada)}</h2>
                 </div>
                 <div>
-                  <h1>Casa</h1>
-                  <h2>#{usuario.casa}</h2>
+                  <h1>Calle</h1>
+                  <h2>{getValueOrDefault(usuarioData?.calle)}</h2>
                 </div>
-              </> : ''
+              </>
             }
             <div>
               <h1>Nivel</h1>
-              <h2>{usuario.isadmin}</h2>
+              <h2>{usuarioData?.isadmin}</h2>
             </div>
             <div>
               <h1>Estatus</h1>
@@ -64,44 +93,47 @@ export function UsuarioDetalles(props) {
           <div className={styles.box1_2}>
             <div>
               <h1>Folio</h1>
-              <h2>{usuario.folio}</h2>
+              <h2>{usuarioData?.folio}</h2>
             </div>
             <div>
               <h1>Residencial</h1>
-              <h2>{usuario.residencial_nombre}</h2>
+              <h2>{usuarioData?.residencial_nombre}</h2>
             </div>
-            {usuario.isadmin === 'Residente' ?
+            {permissions.showDatosResidente &&
               <>
 
                 <div>
-                  <h1>Calle</h1>
-                  <h2>{usuario.calle}</h2>
+                  <h1>Casa</h1>
+                  <h2>#{getValueOrDefault(usuarioData?.casa)}</h2>
                 </div>
-              </> : ''
+
+              </>
             }
             <div>
               <h1>Correo</h1>
-              <h2>{usuario.email}</h2>
+              <h2>{usuarioData?.email}</h2>
             </div>
 
           </div>
         </div>
 
-        {user && user.isadmin === 'Admin' ? (
+        {permissions.showAdmin &&
           <>
 
-            <div className={styles.iconEdit}>
-              <FaEdit onClick={onOpenClose} />
-            </div>
+            <IconKey usuario={usuario} onOpenCloseEditPass={onOpenCloseEditPass} />
+
+            <IconEdit onOpenEdit={onOpenClose} />
 
           </>
-        ) : (
-          ''
-        )}
+        }
       </div>
 
       <BasicModal title='Modificar usuario' show={show} onClose={onOpenClose}>
-        <UsuarioEditForm reload={reload} onReload={onReload} usuario={usuario} onOpenClose={onOpenClose} onToastSuccessUsuarioMod={onToastSuccessUsuarioMod} />
+        <UsuarioEditForm reload={reload} onReload={onReload} usuarioData={usuarioData} actualizarUsuario={actualizarUsuario} onOpenClose={onOpenClose} onToastSuccessUsuarioMod={onToastSuccessUsuarioMod} />
+      </BasicModal>
+
+      <BasicModal title='Modificar contraseña' show={showEditPass} onClose={onOpenCloseEditPass}>
+        <EditPass usuario={usuario} onOpenCloseEditPass={onOpenCloseEditPass} onToastSuccessUsuarioMod={onToastSuccessUsuarioMod} />
       </BasicModal>
 
 

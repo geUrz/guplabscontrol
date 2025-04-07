@@ -2,10 +2,8 @@ import { Button, Dropdown, Form, FormField, FormGroup, Image, Input, Label, Mess
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import { FaUserPlus } from 'react-icons/fa'
 import Link from 'next/link'
 import { useRedirectIfAuthenticated } from '@/hooks'
-import { BasicJoin } from '@/layouts'
 import styles from './signup.module.css'
 
 export default function Signup() {
@@ -20,18 +18,17 @@ export default function Signup() {
     calle: '',
     casa: '',
     email: '',
-    isadmin: '',  // Campo de nivel (Admin, Comité, etc.)
-    residencial_id: '',  // Nuevo campo para el residencial seleccionado
+    isadmin: '',  
+    residencial_id: '', 
     password: '',
     confirmarPassword: ''
   })
 
-  const [residenciales, setResidenciales] = useState([]) // Estado para almacenar los residenciales
+  const [residenciales, setResidenciales] = useState([]) 
   const [error, setError] = useState(null)
 
   useRedirectIfAuthenticated()
 
-  // Función para obtener los residenciales
   useEffect(() => {
     const fetchResidenciales = async () => {
       try {
@@ -67,27 +64,12 @@ export default function Signup() {
       newErrors.usuario = 'El campo es requerido'
     }
 
-    if (!credentials.email) {
-      newErrors.email = 'El campo es requerido' // Validación de email
-    }
-
     if (!credentials.isadmin) {
-      newErrors.isadmin = 'El campo es requerido' // Validación de nivel
+      newErrors.isadmin = 'El campo es requerido' 
     }
 
-    // Validación del residencial para todos los niveles
     if (!credentials.residencial_id) {
-      newErrors.residencial = 'El campo es requerido' // Validación del residencial
-    }
-
-    // Validaciones de privada, calle y casa solo si el nivel es Residente
-    if (credentials.isadmin === 'Residente') {
-      if (!credentials.calle) {
-        newErrors.calle = 'El campo es requerido';
-      }
-      if (!credentials.casa) {
-        newErrors.casa = 'El campo es requerido';
-      }
+      newErrors.residencial = 'El campo es requerido' 
     }
 
     if (!credentials.password) {
@@ -129,7 +111,7 @@ export default function Signup() {
         casa: '',
         email: '',
         isadmin: '',
-        residencial_id: '', // Limpiar el campo residencial
+        residencial_id: '',
         password: '',
         confirmarPassword: ''
       })
@@ -141,9 +123,9 @@ export default function Signup() {
       if (error.response && error.response.data && error.response.data.error) {
         setError(error.response.data.error); // Error específico del backend
       } else if (error.message) {
-        setError(error.message); // Error general de JS (por ejemplo, error de red)
+        setError(error.message)
       } else {
-        setError('¡ Ocurrió un error inesperado !'); // Fallback para cualquier otro tipo de error
+        setError('¡ Ocurrió un error inesperado !')
       }
     }
   };
@@ -156,6 +138,10 @@ export default function Signup() {
         <div className={styles.boxForm}>
           <div className={styles.logo}>
             <Image src='/img/logo.png' />
+          </div>
+
+          <div className={styles.h1}>
+            <h1>Crear usuario</h1>
           </div>
 
           <Form onSubmit={handleSubmit}>
@@ -180,7 +166,7 @@ export default function Signup() {
                 />
                 {errors.usuario && <Message negative>{errors.usuario}</Message>}
               </FormField>
-              <FormField error={!!errors.email}>
+              <FormField>
                 <Label>Correo</Label>
                 <Input
                   name='email'
@@ -188,16 +174,16 @@ export default function Signup() {
                   value={credentials.email}
                   onChange={handleChange}
                 />
-                {errors.email && <Message negative>{errors.email}</Message>}
               </FormField>
               <FormField error={!!errors.isadmin}>
                 <Label>Nivel</Label>
                 <Dropdown
-                  placeholder='Selecciona nivel'
+                  placeholder='Seleccionar'
                   fluid
                   selection
                   options={[
                     { key: 'Admin', text: 'Admin', value: 'Admin' },
+                    { key: 'ComitéSU', text: 'ComitéSU', value: 'ComitéSU' },
                     { key: 'Comité', text: 'Comité', value: 'Comité' },
                     { key: 'Residente', text: 'Residente', value: 'Residente' },
                     { key: 'Caseta', text: 'Caseta', value: 'Caseta' },
@@ -221,7 +207,7 @@ export default function Signup() {
                       onChange={handleChange}
                     />
                   </FormField>
-                  <FormField error={!!errors.calle}>
+                  <FormField>
                     <Label>Calle</Label>
                     <Input
                       name='calle'
@@ -229,9 +215,8 @@ export default function Signup() {
                       value={credentials.calle}
                       onChange={handleChange}
                     />
-                    {errors.calle && <Message negative>{errors.calle}</Message>}
                   </FormField>
-                  <FormField error={!!errors.casa}>
+                  <FormField>
                     <Label>Casa</Label>
                     <Input
                       name='casa'
@@ -239,7 +224,6 @@ export default function Signup() {
                       value={credentials.casa}
                       onChange={handleChange}
                     />
-                    {errors.casa && <Message negative>{errors.casa}</Message>}
                   </FormField>
                 </>
               )}
@@ -247,7 +231,7 @@ export default function Signup() {
               <FormField error={!!errors.residencial_id}>
                 <Label>Residencial</Label>
                 <Dropdown
-                  placeholder='Selecciona residencial'
+                  placeholder='Seleccionar'
                   fluid
                   selection
                   options={residenciales}
@@ -294,7 +278,7 @@ export default function Signup() {
 
         <div className={styles.footer}>
           <div className={styles.section}>
-            <h1>2025 © Copyright | ClickNet</h1>
+          <h1>© 2025 ClickNet</h1>
           </div>
         </div>
 

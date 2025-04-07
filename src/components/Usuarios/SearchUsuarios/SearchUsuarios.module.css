@@ -33,17 +33,9 @@
 
 .iconSearch svg, .iconSearch path{
   font-size: 28px;
-  color: var(--clrBL0);
+  color: var(--clrGR0);
   cursor: pointer;
 } 
-
-.iconSearch svg:hover, .iconSearch:hover path{
-  color: var(--clrBL1);
-}
-
-.iconSearch svg:active, .iconSearch:active path{
-  color: var(--clrBL2);
-}
 
 .visitaLista{
   position: absolute;

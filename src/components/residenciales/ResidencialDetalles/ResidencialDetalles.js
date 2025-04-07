@@ -1,20 +1,28 @@
-import { IconClose } from '@/components/Layouts';
+import { IconClose, IconEdit } from '@/components/Layouts';
 import { formatDateIncDet } from '@/helpers';
 import { BasicModal } from '@/layouts';
 import { FaEdit } from 'react-icons/fa';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ResidencialEditForm } from '../ResidencialEditForm/ResidencialEditForm';
 import { useAuth } from '@/contexts/AuthContext';
 import styles from './ResidencialDetalles.module.css';
 
 export function ResidencialDetalles(props) {
 
-  const { reload, onReload, residencial, onCloseDetalles, onToastSuccessMod } = props
-
-  const { user } = useAuth()
+  const { user, reload, onReload, residencial, onCloseDetalles, onToastSuccessMod } = props
 
   const [showEditResidencial, setShowEditResidencial] = useState(null)
   const onOpenEditResidencial = () => setShowEditResidencial(prevState => !prevState)
+
+  const permissions = useMemo(() => {
+
+    if(!user) return {}
+
+    return{
+      showAdmin: ['Admin'].includes(user?.isadmin)
+    }
+
+  }, [user])
 
   return (
     <>
@@ -44,17 +52,12 @@ export function ResidencialDetalles(props) {
           </div>
         </div>
 
-        {user.isadmin === 'Admin' ? (
-          <>
+        {permissions.showAdmin &&
 
-            <div className={styles.iconEdit}>
-              <FaEdit onClick={onOpenEditResidencial} />
-            </div>
+          <IconEdit onOpenEdit={onOpenEditResidencial} />
 
-          </>
-        ) : (
-          ''
-        )}
+        }
+
       </div>
 
       <BasicModal title='modificar el residencial' show={showEditResidencial} onClose={onOpenEditResidencial}>

@@ -9,15 +9,15 @@ import styles from './AnuncioEditForm.module.css'
 
 export function AnuncioEditForm(props) {
 
-  const { reload, onReload, anuncio, onOpenEditAnuncio, onToastSuccessMod } = props
+  const { reload, onReload, anuncioData, actualizarAnuncio, onOpenEditAnuncio, onToastSuccessMod } = props
 
   const { user } = useAuth()
 
   const [formData, setFormData] = useState({
-    anuncio: anuncio.anuncio,
-    descripcion: anuncio.descripcion,
-    date: anuncio.date ? new Date(anuncio.date + 'T00:00:00') : null,
-    hora: anuncio.hora
+    anuncio: anuncioData.anuncio,
+    descripcion: anuncioData.descripcion,
+    date: anuncioData.date ? new Date(anuncioData.date + 'T00:00:00') : null,
+    hora: anuncioData.hora
   })
 
   const [errors, setErrors] = useState({})
@@ -61,12 +61,17 @@ export function AnuncioEditForm(props) {
       return
     }
 
+    const formatDate = (date) => date ? date.toISOString().split('T')[0] : null;
+  
+    const formattedData = {
+      ...formData,
+      date: formatDate(formData.date),
+    }
+
     try {
-      await axios.put(`/api/anuncios/anuncios?id=${anuncio.id}`, {
-        ...formData,
-        date: formData.date ? formData.date.toISOString().split('T')[0] : null
-      })
+      await axios.put(`/api/anuncios/anuncios?id=${anuncioData.id}`, formattedData)
       onReload()
+      actualizarAnuncio(formattedData)
       onOpenEditAnuncio()
       onToastSuccessMod()
     } catch (error) {

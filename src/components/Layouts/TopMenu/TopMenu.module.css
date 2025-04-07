@@ -36,7 +36,7 @@
   font-weight: 600 !important;
 }
 
-.h1Logo{
+.logo{
   width: 100%;
   height: auto;
   display: flex;
@@ -45,15 +45,9 @@
   justify-content: center;
 }
 
-.h1Logo img{
-  height: 32px;
-}
-
-.h1Logo h1{
-  margin-top: 4px;
-  font-size: 18px;
-  font-family: 'Bebas' !important;
-  text-align: center;
+.logo img{
+  height: 60px;
+  cursor: pointer;
 }
 
 .user{

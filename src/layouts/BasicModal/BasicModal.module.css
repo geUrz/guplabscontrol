@@ -18,7 +18,7 @@
 .header h1{
   font-size: 22.5px;
   font-family: 'Bebas' !important;
-  color: var(--clrBL0000);
+  color: var(--clrGR0);
 } 
 
 @media screen and (min-width:768px) {

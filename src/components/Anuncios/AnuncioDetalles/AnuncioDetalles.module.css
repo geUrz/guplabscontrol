@@ -89,29 +89,6 @@
   color: var(--clrBL1);
 }
 
-.iconDel{
-  margin-top: 20px;
-  width: 100%;
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.iconDel svg, .iconDel path{
-  font-size: 20px;
-  color: var(--clrGR000);
-  cursor: pointer;
-}
-
-.iconDel div svg:hover, .iconDel div:hover path{
-  color: var(--clrGR00);
-}
-
-.iconDel div svg:active, .iconDel div:active path{
-  color: var(--clrGR0);
-}
-
 .iconClose svg, .iconClose path{
   padding: 8px;
   font-size: 34px;

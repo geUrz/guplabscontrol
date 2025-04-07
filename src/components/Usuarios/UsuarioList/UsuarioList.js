@@ -3,16 +3,12 @@ import { map, size } from 'lodash'
 import { FaUsers } from 'react-icons/fa'
 import { BasicModal } from '@/layouts'
 import { UsuarioDetalles } from '../UsuarioDetalles'
-import { useEffect, useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
-import { getStatusClass } from '@/helpers/getStatusClass/getStatusClass'
+import { useState } from 'react'
 import styles from './UsuarioList.module.css'
 
 export function UsuarioList(props) {
 
   const { reload, onReload, usuarios, onToastSuccessUsuarioMod } = props
-
-  const { loading } = useAuth()
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null)
@@ -28,23 +24,11 @@ export function UsuarioList(props) {
     setShowDetalles(false)
   }
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoading(false)
-    }, 800)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (loading) {
-    return <Loading size={45} loading={0} />
-  }
-
   return (
 
     <>
 
-      {showLoading ? (
+      {!usuarios ? (
         <Loading size={45} loading={1} />
       ) : (
         size(usuarios) === 0 ? (

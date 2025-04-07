@@ -7,7 +7,7 @@ import styles from './SearchResidentes.module.css';
 
 export function SearchResidentes(props) {
 
-  const {reload, onReload, onResults, onOpenCloseSearch, onToastSuccessMod} = props
+  const {user, reload, onReload, onResults, onOpenCloseSearch, onToastSuccessMod} = props
 
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(false)
@@ -18,25 +18,31 @@ export function SearchResidentes(props) {
     const fetchData = async () => {
       if (query.trim() === '') {
         setResidentes([])
-        return
+        return;
       }
-
+  
       setLoading(true)
       setError('')
-
+  
       try {
-        const response = await axios.get(`/api/usuarios/usuarios?search=${query}`)
-        setResidentes(response.data)
+        const res = await axios.get(`/api/usuarios/usuarios?search=${query}`)
+        const filteredResidentes = res.data.filter(residente => 
+          residente.residencial_id === user.residencial_id && 
+          ['ComitéSU', 'Comité', 'Caseta', 'Residente'].includes(residente.isadmin)
+        )
+        setResidentes(filteredResidentes)
       } catch (err) {
+        console.error('Error fetching data:', err)
         setError('No se encontraron residentes')
         setResidentes([])
       } finally {
         setLoading(false)
       }
     };
-
+  
     fetchData()
-  }, [query])
+  }, [query, user.residencial_id])
+  
 
   return (
     <div className={styles.main}>

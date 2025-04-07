@@ -4,22 +4,28 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Form, Button, Input, Label, FormGroup, FormField, Message, Dropdown } from 'semantic-ui-react'
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import styles from './ModUsuarioForm.module.css'
+import { BasicModal } from '@/layouts'
+import { EditPass, IconKey } from '@/components/Layouts'
 
 export function ModUsuarioForm(props) {
-  const { onOpenClose } = props
+  const { onOpenClose, onToastSuccessMod } = props
   const { user, logout } = useAuth()
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [showEditPass, setShowEditPass] = useState(false)
+
+  const onOpenCloseEditPass = () => setShowEditPass((prevState) => !prevState)
 
   const [formData, setFormData] = useState({
     newNombre: user.nombre || '',
     newUsuario: user.usuario || '',
     newEmail: user.email || '',
     newIsAdmin: user.isadmin || '',
-    newPassword: '',
-    confirmPassword: '',
-    newResidencial: user.residencial_id || '' // Nuevo estado para el residencial, preasignado
+    newResidencial: user.residencial_id || ''
   });
 
-  const [residenciales, setResidenciales] = useState([]); // Estado para residenciales
+  const [residenciales, setResidenciales] = useState([]);
   const [error, setError] = useState(null)
   const [errors, setErrors] = useState({})
 
@@ -38,9 +44,8 @@ export function ModUsuarioForm(props) {
       newErrors.newIsAdmin = 'El campo es requerido';
     }
 
-    // Validación para el residencial solo si el nivel no es Admin (opcional)
     if (!formData.newResidencial) {
-      newErrors.newResidencial = 'El campo es requerido'; // Validación para residencial
+      newErrors.newResidencial = 'El campo es requerido';
     }
 
     setErrors(newErrors);
@@ -57,16 +62,13 @@ export function ModUsuarioForm(props) {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    setIsLoading(true)
+
     if (!validarFormUser()) {
       return
     }
 
     setError(null)
-
-    if (formData.newPassword && formData.newPassword !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden')
-      return
-    }
 
     try {
       await axios.put('/api/auth/updateUser', {
@@ -75,13 +77,12 @@ export function ModUsuarioForm(props) {
         newUsuario: formData.newUsuario,
         newEmail: formData.newEmail,
         newIsAdmin: formData.newIsAdmin,
-        newResidencial: formData.newResidencial, // Enviar el residencial
-        newPassword: formData.newPassword,
       })
 
       logout()
 
     } catch (error) {
+      setIsLoading(false)
       console.error('Error al actualizar el perfil:', error);
       if (error.response && error.response.data && error.response.data.error) {
         setError(error.response.data.error);
@@ -91,7 +92,6 @@ export function ModUsuarioForm(props) {
     }
   }
 
-  // Cargar los residenciales al montar el componente
   useEffect(() => {
     const fetchResidenciales = async () => {
       try {
@@ -112,10 +112,11 @@ export function ModUsuarioForm(props) {
 
   const opcionesNivel = [
     { key: 1, text: 'Admin', value: 'Admin' },
-    { key: 2, text: 'Comité', value: 'Comité' },
-    { key: 3, text: 'Residente', value: 'Residente' },
-    { key: 4, text: 'Caseta', value: 'Caseta' },
-    { key: 5, text: 'Técnico', value: 'Técnico' }
+    { key: 2, text: 'ComitéSU', value: 'ComitéSU' },
+    { key: 3, text: 'Comité', value: 'Comité' },
+    { key: 4, text: 'Residente', value: 'Residente' },
+    { key: 5, text: 'Caseta', value: 'Caseta' },
+    { key: 6, text: 'Técnico', value: 'Técnico' }
   ]
 
   const [activate, setActivate] = useState(false)
@@ -153,7 +154,7 @@ export function ModUsuarioForm(props) {
       <Form onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <FormGroup widths='equal'>
           <FormField error={!!errors.newNombre}>
-            <Label>Nuevo nombre</Label>
+            <Label>Nombre</Label>
             <Input
               name='newNombre'
               type='text'
@@ -163,7 +164,7 @@ export function ModUsuarioForm(props) {
             {errors.newNombre && <Message negative>{errors.newNombre}</Message>}
           </FormField>
           <FormField error={!!errors.newUsuario}>
-            <Label>Nuevo usuario</Label>
+            <Label>Usuario</Label>
             <Input
               name='newUsuario'
               type='text'
@@ -173,7 +174,7 @@ export function ModUsuarioForm(props) {
             {errors.newUsuario && <Message negative>{errors.newUsuario}</Message>}
           </FormField>
           <FormField error={!!errors.newEmail}>
-            <Label>Nuevo correo</Label>
+            <Label>Correo</Label>
             <Input
               name='newEmail'
               type='email'
@@ -211,29 +212,18 @@ export function ModUsuarioForm(props) {
             />
             {errors.newResidencial && <Message negative>{errors.newResidencial}</Message>}
           </FormField>
-
-          <FormField>
-            <Label>Nueva contraseña</Label>
-            <Input
-              name='newPassword'
-              type='password'
-              value={formData.newPassword}
-              onChange={handleChange}
-            />
-          </FormField>
-          <FormField>
-            <Label>Confirmar nueva contraseña</Label>
-            <Input
-              name='confirmPassword'
-              type='password'
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-          </FormField>
         </FormGroup>
         {error && <p className={styles.error}>{error}</p>}
-        <Button primary onClick={handleSubmit}>Guardar</Button>
+
+        <IconKey onOpenCloseEditPass={onOpenCloseEditPass} />
+
+        <Button primary loading={isLoading} onClick={handleSubmit}>Guardar</Button>
       </Form>
+
+      <BasicModal title='Modificar contraseña' show={showEditPass} onClose={onOpenCloseEditPass}>
+        <EditPass usuario={user} onOpenCloseEditPass={onOpenCloseEditPass} onToastSuccessUsuarioMod={onToastSuccessMod} />
+      </BasicModal>
+
     </>
   )
 }

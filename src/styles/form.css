@@ -20,6 +20,16 @@
   border: 2px solid var(--clrBL0) !important;
 }
 
+.ui.form .field.field input:-webkit-autofill{
+  box-shadow: 0 0 0 100px white inset !important;
+  border-color: var(--clrGR3)  !important;
+}
+
+.ui.form .field.field input:-webkit-autofill:focus{
+  box-shadow: 0 0 0 100px white inset !important;
+  border-color: var(--clrBL4)  !important;
+}
+
 .ui.form select{
   padding-left: 5px !important;
   width: 300px !important;
@@ -77,7 +87,12 @@
 }  
 
 .field.error input, .field.error select, .field.error textarea{
-  border: 2px solid gray !important;
+  border: 2px solid var(--clrR0) !important;
+}
+
+.ui.message{
+  text-align: center;
+  color: var(--clrR0) !important;
 }
 
 .ui.selection.dropdown{

@@ -4,10 +4,16 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Form, Button, Input, Label, FormGroup, FormField, Message } from 'semantic-ui-react'
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import styles from './ModResidenteForm.module.css'
+import { EditPass, IconKey } from '@/components/Layouts'
+import { BasicModal } from '@/layouts'
 
 export function ModResidenteForm(props) {
-  const { onOpenClose } = props
+  const { onOpenClose, onToastSuccessMod } = props
   const { user, logout } = useAuth()
+
+  const [showEditPass, setShowEditPass] = useState(false)
+
+  const onOpenCloseEditPass = () => setShowEditPass((prevState) => !prevState)
 
   const [formData, setFormData] = useState({
     newNombre: user.nombre || '',
@@ -16,9 +22,7 @@ export function ModResidenteForm(props) {
     newCalle: user.calle || '',
     newCasa: user.casa || '',
     newEmail: user.email || '',
-    newIsAdmin: user.isadmin || '',
-    newPassword: '',
-    confirmPassword: ''
+    newIsAdmin: user.isadmin || ''
   });
 
   const [error, setError] = useState(null)
@@ -28,9 +32,6 @@ export function ModResidenteForm(props) {
     const newErrors = {}
     if (!formData.newNombre) newErrors.newNombre = 'El campo es requerido'
     if (!formData.newUsuario) newErrors.newUsuario = 'El campo es requerido'
-    if (!formData.newCalle) newErrors.newCalle = 'El campo es requerido'
-    if (!formData.newCasa) newErrors.newCasa = 'El campo es requerido'
-    if (!formData.newEmail) newErrors.newEmail = 'El campo es requerido'
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -52,11 +53,6 @@ export function ModResidenteForm(props) {
 
     setError(null)
 
-    if (formData.newPassword && formData.newPassword !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden')
-      return
-    }
-
     try {
       await axios.put('/api/auth/updateUser', {
         userId: user.id,
@@ -65,9 +61,7 @@ export function ModResidenteForm(props) {
         newPrivada: formData.newPrivada,
         newCalle: formData.newCalle,
         newCasa: formData.newCasa,
-        newEmail: formData.newEmail,
-        newIsAdmin: formData.newIsAdmin,
-        newPassword: formData.newPassword,
+        newEmail: formData.newEmail
       })
 
       logout()
@@ -89,27 +83,27 @@ export function ModResidenteForm(props) {
       <Form>
         <FormGroup widths='equal'>
           <FormField error={!!errors.newNombre}>
-            <Label>Nuevo nombre</Label>
+            <Label>Nombre</Label>
             <Input
               name='newNombre'
               type='text'
               value={formData.newNombre}
               onChange={handleChange}
             />
-            {errors.newNombre && <span className={styles.error}>{errors.newNombre}</span>}
+            {errors.newNombre && <Message>{errors.newNombre}</Message>}
           </FormField>
           <FormField error={!!errors.newUsuario}>
-            <Label>Nuevo usuario</Label>
+            <Label>Usuario</Label>
             <Input
               name='newUsuario'
               type='text'
               value={formData.newUsuario}
               onChange={handleChange}
             />
-            {errors.newUsuario && <span className={styles.error}>{errors.newUsuario}</span>}
+            {errors.newUsuario && <Message>{errors.newUsuario}</Message>}
           </FormField>
           <FormField>
-            <Label>Nueva privada</Label>
+            <Label>Privada</Label>
             <Input
               name='newPrivada'
               type='text'
@@ -117,58 +111,46 @@ export function ModResidenteForm(props) {
               onChange={handleChange}
             />
           </FormField>
-          <FormField error={!!errors.newCalle}>
-            <Label>Nueva calle</Label>
+          <FormField>
+            <Label>Calle</Label>
             <Input
               name='newCalle'
               type='text'
               value={formData.newCalle}
               onChange={handleChange}
             />
-            {errors.newCalle && <span className={styles.error}>{errors.newCalle}</span>}
           </FormField>
-          <FormField error={!!errors.newCasa}>
-            <Label>Nueva casa</Label>
+          <FormField>
+            <Label>Casa</Label>
             <Input
               name='newCasa'
               type='text'
               value={formData.newCasa}
               onChange={handleChange}
             />
-            {errors.newCasa && <span className={styles.error}>{errors.newCasa}</span>}
           </FormField>
-          <FormField error={!!errors.newEmail}>
-            <Label>Nuevo correo</Label>
+          <FormField>
+            <Label>Correo</Label>
             <Input
               name='newEmail'
               type='email'
               value={formData.newEmail}
               onChange={handleChange}
             />
-            {errors.newEmail && <span className={styles.error}>{errors.newEmail}</span>}
-          </FormField>
-          <FormField>
-            <Label>Nueva contraseña</Label>
-            <Input
-              name='newPassword'
-              type='password'
-              value={formData.newPassword}
-              onChange={handleChange}
-            />
-          </FormField>
-          <FormField>
-            <Label>Confirmar nueva contraseña</Label>
-            <Input
-              name='confirmPassword'
-              type='password'
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
           </FormField>
         </FormGroup>
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <Message>{error}</Message>}
+
+        <IconKey onOpenCloseEditPass={onOpenCloseEditPass} />
+        
         <Button primary onClick={handleSubmit}>Guardar</Button>
       </Form>
+
+
+      <BasicModal title='Modificar contraseña' show={showEditPass} onClose={onOpenCloseEditPass}>
+        <EditPass usuario={user} onOpenCloseEditPass={onOpenCloseEditPass} onToastSuccessUsuarioMod={onToastSuccessMod} />
+      </BasicModal>
+
     </>
   )
 }

@@ -7,7 +7,7 @@ import styles from './SearchUsuarios.module.css';
 
 export function SearchUsuarios(props) {
 
-  const {reload, onReload, onResults, onOpenCloseSearch, onToastSuccessUsuarioMod} = props
+  const {user, reload, onReload, onResults, onOpenCloseSearch, onToastSuccessUsuarioMod} = props
 
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(false)
@@ -25,18 +25,23 @@ export function SearchUsuarios(props) {
       setError('')
 
       try {
-        const response = await axios.get(`/api/usuarios/usuarios?search=${query}`)
-        setUsuarios(response.data)
+        const res = await axios.get(`/api/usuarios/usuarios?search=${query}`)
+        const filteredUsuarios = res.data.filter(usuario => 
+          usuario.residencial_id === user.residencial_id && 
+          ['Admin', 'Técnico'].includes(usuario.isadmin)
+        )
+        setUsuarios(filteredUsuarios)
       } catch (err) {
+        console.error('Error fetching data:', err)
         setError('No se encontraron usuarios')
         setUsuarios([])
       } finally {
         setLoading(false)
       }
     };
-
+  
     fetchData()
-  }, [query])
+  }, [query, user.residencial_id])
 
   return (
     <div className={styles.main}>

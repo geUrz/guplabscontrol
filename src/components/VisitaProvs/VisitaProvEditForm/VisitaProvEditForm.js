@@ -7,14 +7,14 @@ import { useAuth } from '@/contexts/AuthContext'
 
 export function VisitaProvEditForm(props) {
 
-  const { reload, onReload, visitaprov, onOpenEditVisitaprov, onToastSuccessMod } = props
+  const { reload, onReload, visitaprovData, actualizarVisitaprov, onOpenEditVisitaprov, onToastSuccessMod } = props
 
   const {user} = useAuth()
 
   const [formData, setFormData] = useState({
-    visitaprovedor: visitaprov.visitaprovedor,
-    descripcion: visitaprov.descripcion,
-    estado: visitaprov.estado
+    visitaprovedor: visitaprovData.visitaprovedor,
+    descripcion: visitaprovData.descripcion,
+    estado: visitaprovData.estado
   })
 
   const [errors, setErrors] = useState({})
@@ -55,8 +55,9 @@ export function VisitaProvEditForm(props) {
     }
 
     try {
-      await axios.put(`/api/visitaprovedores/visitaprovedores?id=${visitaprov.id}`, formData)
+      await axios.put(`/api/visitaprovedores/visitaprovedores?id=${visitaprovData.id}`, formData)
       onReload()
+      actualizarVisitaprov(formData)
       onOpenEditVisitaprov()
       onToastSuccessMod()
     } catch (error) {

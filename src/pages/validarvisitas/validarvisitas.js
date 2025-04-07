@@ -4,7 +4,7 @@ import { ValidarCodigo } from '@/components/ValidarVisitas/ValidarCodigo/Validar
 import { DatosCodigo } from '@/components/ValidarVisitas'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Loading, ToastDelete, ToastSuccess } from '@/components/Layouts'
+import { Loading, Title, ToastDelete, ToastSuccess } from '@/components/Layouts'
 import { SearchVisitas, VisitasList, VisitasListSearch } from '@/components/Visitas'
 import styles from './validarvisitas.module.css'
 import { FaSearch } from 'react-icons/fa'
@@ -65,14 +65,16 @@ export default function Validarvisitas() {
   }, [user, reload])
 
   if (loading) {
-      return <Loading size={45} loading={0} />
+      return <Loading size={45} loading={'L'} />
     }
 
   return (
 
     <ProtectedRoute>
 
-      <BasicLayout title='Validar visitas' relative onReload={onReload}>
+      <BasicLayout relative onReload={onReload}>
+
+        <Title title='validar visitas' />
 
       {toastSuccessQRValido && <ToastSuccessQRValido onToastSuccessQRValido={onToastSuccessQRValido} />}
 

@@ -34,6 +34,22 @@
   height: 160px;
 }
 
+.h1{
+  padding: 20px 0;
+  margin-top: -60px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.h1 h1{
+  font-size: 26px;
+  text-align: center;
+  color: var(--clrBL0);
+}
+
 .link{
   width: 100%;
   height: auto;

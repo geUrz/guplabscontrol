@@ -13,7 +13,6 @@ export function IncidenciasListSearch(props) {
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [incidenciaSeleccionada, setIncidenciaSeleccionada] = useState(null)
-  const [showLoading, setShowLoading] = useState(true)
 
   const onOpenDetalles = (incidencia) => {
     setIncidenciaSeleccionada(incidencia)
@@ -25,19 +24,11 @@ export function IncidenciasListSearch(props) {
     setShowDetalles(false)
   }
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoading(false)
-    }, 800)
-
-    return () => clearTimeout(timer)
-  }, [])
-
   return (
 
     <>
 
-      {showLoading ?
+      {!incidencias ?
         <Loading size={45} loading={1} /> :
         <div className={styles.main}>
           {map(incidencias, (incidencia) => (

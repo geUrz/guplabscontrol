@@ -10,7 +10,7 @@ import styles from './VisitaDetalles.module.css'
 
 export function VisitaDetalles(props) {
   const { user, reload, onReload, visita: initialVisita, onCloseDetalles, onToastSuccessMod, onToastSuccessDel } = props;
-  
+
   const [visita, setVisita] = useState(initialVisita)
   const [showEditVisita, setShowEditVisita] = useState(false)
   const [showRes, setShowRes] = useState(false)
@@ -21,7 +21,7 @@ export function VisitaDetalles(props) {
   const [selectedImg, setSelectedImg] = useState(null)
   const [selectedImageKey, setSelectedImageKey] = useState(null)
   const [showSubirImg, setShowSubirImg] = useState(false)
-  
+
   const onOpenEditVisita = () => setShowEditVisita((prevState) => !prevState)
   const onOpenCloseRes = () => setShowRes((prevState) => !prevState)
   const onOpenCloseTipoAcc = () => setShowTipoAcc((prevState) => !prevState)
@@ -29,7 +29,6 @@ export function VisitaDetalles(props) {
   const onToastSuccessDownloadQR = () => setShowDownQR((prevState) => !prevState)
 
   const [showConfirmDelImg, setShowConfirmDelImg] = useState(false)
-  const [imageToDelete, setImageToDelete] = useState(null)
   const [imgKeyToDelete, setImgKeyToDelete] = useState(null)
 
   const openImg = (imgUrl, imgKey) => {
@@ -39,8 +38,10 @@ export function VisitaDetalles(props) {
   }
 
   const onShowSubirImg = (imgKey) => {
-    setSelectedImageKey(imgKey)
-    setShowSubirImg(true)
+    if(user && user.isadmin === 'Admin' || user.isadmin === 'Caseta'){
+      setSelectedImageKey(imgKey)
+      setShowSubirImg(true)
+    }
   }
 
   const onCloseSubirImg = () => {
@@ -75,7 +76,6 @@ export function VisitaDetalles(props) {
 
   const handleDeleteImage = async () => {
     try {
-      // Realiza la solicitud de eliminación de la imagen en el backend
       await axios.delete(`/api/visitas/uploadImage`, {
         params: {
           id: visita.id,
@@ -83,15 +83,14 @@ export function VisitaDetalles(props) {
         },
       })
 
-      // Actualiza el estado de la visita después de eliminar la imagen
       setVisita((prevIncidencia) => ({
         ...prevIncidencia,
-        [imgKeyToDelete]: null, // Se establece la clave de la imagen a null
+        [imgKeyToDelete]: null, 
       }))
 
-      onReload() // Recarga los datos
-      setShowImg(false) // Cierra el modal de imagen
-      setShowConfirmDelImg(false) // Cierra el modal de confirmación
+      onReload() 
+      setShowImg(false)
+      setShowConfirmDelImg(false)
     } catch (error) {
       console.error('Error al eliminar la imagen:', error)
     }
@@ -118,40 +117,35 @@ export function VisitaDetalles(props) {
         }
 
         const qrCodeSize = 300
-        const textHeight = 60 // Ajusta este valor para el texto superior
-        const additionalTextHeight = 60 // Ajusta este valor para el texto inferior
+        const textHeight = 60 
+        const additionalTextHeight = 60 
         const width = qrCodeSize;
         const height = qrCodeSize + textHeight + additionalTextHeight
 
         canvas.width = width;
         canvas.height = height
 
-        // Fondo blanco
         ctx.fillStyle = 'white'
         ctx.fillRect(0, 0, width, height)
 
-        // Texto que va encima del código QR
         const headerText = 'Código de acceso\n' +
           `${visita.codigo}`
 
-        ctx.font = '18px Calibri' // Tamaño de la fuente para el texto
+        ctx.font = '18px Calibri' 
         ctx.fillStyle = 'black'
-        ctx.textAlign = 'center' // Alinea el texto al centro horizontalmente
-        ctx.textBaseline = 'top' // Alinea el texto al tope
+        ctx.textAlign = 'center' 
+        ctx.textBaseline = 'top' 
 
-        // Divide el texto en líneas y calcula la posición Y inicial
         const lines = headerText.split('\n')
-        const lineHeight = 25; // Altura entre líneas
-        let textY = 25; // Espacio desde el borde superior del canvas
+        const lineHeight = 25
+        let textY = 25
 
-        // Dibuja cada línea del texto
         lines.forEach((line) => {
-          ctx.fillText(line, width / 2, textY) // Centra el texto horizontalmente
-          textY += lineHeight // Ajusta el espaciado entre líneas
+          ctx.fillText(line, width / 2, textY) 
+          textY += lineHeight 
         })
 
-        // Dibuja el código QR debajo del texto
-        const qrY = 70 // Reducido el espacio entre el texto y el QR
+        const qrY = 70 
 
         ctx.drawImage(img, 0, qrY, qrCodeSize, qrCodeSize)
 
@@ -159,22 +153,19 @@ export function VisitaDetalles(props) {
         const usuarioCalle = visita.usuario_calle !== null ? visita.usuario_calle : ''
         const usuarioCasa = visita.usuario_casa && visita.usuario_casa !== '0' ? `#${visita.usuario_casa}` : ''
 
-        // Texto que va debajo del código QR
         const additionalText = `${visita.usuario_nombre}\n` +
           `${usuarioPrivada} ${usuarioCalle} ${usuarioCasa}`
 
-        ctx.font = '18px Calibri' // Tamaño de la fuente para el texto adicional
+        ctx.font = '18px Calibri' 
         const additionalLines = additionalText.split('\n')
-        const additionalLineHeight = 20 // Altura entre líneas del texto adicional
-        let additionalTextY = 5 + qrCodeSize + 60 // Espacio después del código QR
+        const additionalLineHeight = 20 
+        let additionalTextY = 5 + qrCodeSize + 60 
 
-        // Dibuja cada línea del texto adicional
         additionalLines.forEach((line) => {
-          ctx.fillText(line, width / 2, additionalTextY) // Centra el texto horizontalmente
-          additionalTextY += additionalLineHeight // Ajusta el espaciado entre líneas
+          ctx.fillText(line, width / 2, additionalTextY) 
+          additionalTextY += additionalLineHeight 
         })
 
-        // Crear enlace para descargar la imagen
         const link = document.createElement('a')
         link.href = canvas.toDataURL('image/png')
         link.download = `qrCode_${usuarioCalle}_${usuarioCasa}`
@@ -305,7 +296,7 @@ export function VisitaDetalles(props) {
                 {visita[imgKey] === null ? (
                   <FaImage />
                 ) : (
-                    <ImageSemantic src={visita[imgKey]} onClick={() => openImg(visita[imgKey], imgKey)} />
+                  <ImageSemantic src={visita[imgKey]} onClick={() => openImg(visita[imgKey], imgKey)} />
                 )}
               </div>
             ))}
@@ -323,7 +314,7 @@ export function VisitaDetalles(props) {
                 {visita[imgKey] === null ? (
                   <FaImage onClick={() => onShowSubirImg(imgKey)} />
                 ) : (
-                    <ImageSemantic src={visita[imgKey]} onClick={() => openImg(visita[imgKey], imgKey)} />
+                  <ImageSemantic src={visita[imgKey]} onClick={() => openImg(visita[imgKey], imgKey)} />
                 )}
               </div>
             ))}
@@ -344,6 +335,32 @@ export function VisitaDetalles(props) {
       ...prevState,
       ...nuevaData,
     }))
+  }
+
+  const getLastAutorizoValue = (visitaData) => {
+    const { autorizo_usuario, autorizo_lector, updatedAt } = visitaData;
+
+    if (!autorizo_usuario && !autorizo_lector) {
+      return 'Sin ingresar'
+    }
+
+    if (!autorizo_usuario) {
+      return autorizo_lector || 'Sin ingresar';
+    }
+    if (!autorizo_lector) {
+      return autorizo_usuario || 'Sin ingresar';
+    }
+
+    const fechaUltimaActualizacion = new Date(updatedAt || createdAt)
+
+    const fechaUsuario = new Date(visitaData.autorizo_usuario_updatedAt);
+    const fechaLector = new Date(visitaData.autorizo_lector_updatedAt);
+
+    if (fechaUsuario > fechaLector) {
+      return autorizo_usuario;
+    }
+
+    return autorizo_lector;
   }
 
   return (
@@ -385,23 +402,20 @@ export function VisitaDetalles(props) {
             </div>
             <div>
               <h1>Autorizó</h1>
-              {visitaData?.autorizo_usuario === undefined || visitaData?.autorizo_nombre === null ?
-                <h2>Sin ingresar</h2>
-                :
-                <>
-                  <h2>{getValueOrDefault(visitaData?.autorizo_usuario)}</h2>
-                  <h2>{getValueOrDefault(visitaData?.autorizo_nombre)}</h2>
-                </>
+              {
+                visitaData?.autorizo_usuario === undefined && visitaData?.autorizo_lector === undefined ?
+                  <h2>Sin ingresar</h2> :
+                  <h2>{getLastAutorizoValue(visitaData)}</h2>
               }
             </div>
           </div>
         </div>
 
         <div className={styles.imgMain}>
-        <h1>Imágenes</h1>
-        <div className={styles.imgContent}>
-          <Tab panes={panes} className={styles.mainTab} />
-        </div>
+          <h1>Imágenes</h1>
+          <div className={styles.imgContent}>
+            <Tab panes={panes} className={styles.mainTab} />
+          </div>
         </div>
 
         <div className={styles.codigo}>
@@ -434,7 +448,7 @@ export function VisitaDetalles(props) {
       </div>
 
       <BasicModal title='Editar visita' show={showEditVisita} onClose={onOpenEditVisita}>
-        <VisitaEditForm reload={reload} onReload={onReload} visitaData={visitaData} actualizarVisita={actualizarVisita} onOpenEditVisita={onOpenEditVisita} onToastSuccessMod={onToastSuccessMod} />
+        <VisitaEditForm user={user} reload={reload} onReload={onReload} visitaData={visitaData} actualizarVisita={actualizarVisita} onOpenEditVisita={onOpenEditVisita} onToastSuccessMod={onToastSuccessMod} />
       </BasicModal>
 
       <BasicModal
@@ -500,16 +514,6 @@ export function VisitaDetalles(props) {
 
       <Confirm
         open={showConfirmDel}
-        cancelButton={
-          <div className={styles.iconClose}>
-            <FaTimes />
-          </div>
-        }
-        confirmButton={
-          <div className={styles.iconCheck}>
-            <FaCheck />
-          </div>
-        }
         onConfirm={handleDeleteVisita}
         onCancel={onOpenCloseConfirmDel}
         content='¿ Estas seguro de eliminar la visita ?'
@@ -517,16 +521,6 @@ export function VisitaDetalles(props) {
 
       <Confirm
         open={showConfirmDelImg}
-        cancelButton={
-          <div className={styles.iconClose}>
-            <FaTimes />
-          </div>
-        }
-        confirmButton={
-          <div className={styles.iconCheck}>
-            <FaCheck />
-          </div>
-        }
         onConfirm={handleDeleteImage}
         onCancel={() => setShowConfirmDelImg(false)}
         content="¿Estás seguro de eliminar la imagen?"

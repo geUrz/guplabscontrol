@@ -33,7 +33,7 @@ export function BottomMenu() {
               </div>
             </Link>
 
-            {user.isadmin === 'Admin' ? (
+            {user.isadmin === 'Admin' || user.isadmin === 'ComitéSU' ? (
               <>
 
                 <Link href='/visitas' className={styles.tab}>

@@ -5,43 +5,51 @@ import { LoadingMini } from '@/components/Layouts'
 
 export function Card(props) {
 
-  const {children, title, link, count=true, countIncidencias, countAnuncios, countVisitatecnica, countReportes, countVisitaprovedores, countResidenciales, countUsuarios, countResidentes, countOrdenesdeservicio, countRecibos, countCotizaciones } = props
+  const {
+    children, title, link, count=true, countVisitas, countIncidencias, countAnuncios, countVisitaprovedores, countResidenciales, countUsuarios, countResidentes, countReportevisitas
+  } = props
 
-  const [showLoading, setShowLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
 
+  // Objeto que contiene los contadores
   const counts = {
+    '/visitas': countVisitas,
     '/incidencias': countIncidencias,
     '/anuncios': countAnuncios,
-    '/visitatecnica': countVisitatecnica,
-    '/reportes': countReportes,
     '/visitaprovedores': countVisitaprovedores,
     '/residenciales': countResidenciales,
     '/usuarios': countUsuarios,
     '/residentes': countResidentes,
-    '/ordenesdeservicio': countOrdenesdeservicio,
-    '/recibos': countRecibos,
-    '/cotizaciones': countCotizaciones
+    '/reportevisitas': countReportevisitas
   }
 
+  // Simulamos que los datos están siendo cargados
   useEffect(() => {
+    // Este `setTimeout` es solo para simular que los datos están siendo cargados,
+    // puedes eliminarlo si ya tienes la lógica para obtener los datos desde una API.
     const timer = setTimeout(() => {
-      setShowLoading(false)
-    }, 600) 
+      setLoading(false)
+    }, 600) // Esto es solo para simular el "loading"
 
     return () => clearTimeout(timer)
   }, [])
 
+  // Mostramos el contador real solo cuando `loading` sea false
   return (
-
     <Link href={`${link}`} className={styles.card}>
       <div>
         {children}
       </div>
       <div>
-        {showLoading ? <LoadingMini /> : (count ? <h1>{counts[link] || 0}</h1> : '')}
+        {loading ? (
+          // Muestra el LoadingMini solo cuando estamos cargando
+          <LoadingMini />
+        ) : (
+          // Muestra el número directamente cuando ya no estamos cargando
+          count ? <h1>{counts[link] || 0}</h1> : ''
+        )}
         <h2>{title}</h2>
       </div>
     </Link>
-
   )
 }

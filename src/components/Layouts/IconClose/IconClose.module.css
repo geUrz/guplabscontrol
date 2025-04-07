@@ -9,17 +9,8 @@
 }
 
 .iconClose svg, .iconClose path{
-  padding: 8px;
-  font-size: 40px;
+  font-size: 28px;
   color: var(--clrGR00);
   border-radius: 50%;
   cursor: pointer;
-}
-
-.iconClose svg:hover,.iconClose path:hover{
-  background-color: var(--clrGR3);
-}
-
-.iconClose svg:active,.iconClose path:active{
-  background-color: var(--clrGR4);
 }

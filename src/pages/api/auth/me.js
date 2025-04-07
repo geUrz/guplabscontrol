@@ -11,7 +11,7 @@ export default async function meHandler(req, res) {
       return res.status(401).json({ error: 'No autenticado' })
     }
 
-    const decoded = jwt.verify(token, 'secret')
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
     // Cambiar de JOIN a LEFT JOIN para permitir usuarios sin residencial_id
     const [rows] = await connection.query(`

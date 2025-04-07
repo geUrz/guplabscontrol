@@ -44,14 +44,15 @@ export default async function loginHandler(req, res) {
         id: user.id,
         usuario: user.usuario,
         email: user.email,
+        isadmin: user.isadmin
       },
-      'secret'
+      process.env.JWT_SECRET
     );
 
     // Crear cookies
     const serialized = serialize('myToken', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false, /* process.env.NODE_ENV === 'production' */
       sameSite: 'strict',
       maxAge: 60 * 60 * 24 * 30, 
       path: '/'

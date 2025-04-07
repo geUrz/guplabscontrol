@@ -1,9 +1,9 @@
-import { Add, Loading, ToastSuccess } from '@/components/Layouts'
+import { Add, Loading, Title, ToastSuccess } from '@/components/Layouts'
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 import { useAuth } from '@/contexts/AuthContext'
 import { BasicLayout, BasicModal } from '@/layouts'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ResidencialesListSearch, ResidencialForm, ResidencialList, SearchResidencial } from '@/components/residenciales'
 import { FaSearch } from 'react-icons/fa'
 import styles from './residenciales.module.css'
@@ -57,19 +57,37 @@ export default function Residenciales() {
     }, 3000)
   }
 
+  const permissions = useMemo(() => {
+
+    if(!user) return {}
+
+    return{
+      showAdmin: ['Admin'].includes(user?.isadmin)
+    }
+
+  }, [user])
+
   if (loading) {
-    return <Loading size={45} loading={0} />
+    return <Loading size={45} loading={'L'} />
   }
 
   return (
     
     <ProtectedRoute>
 
-      <BasicLayout title='Residenciales' relative onReload={onReload}>
+      <BasicLayout relative onReload={onReload}>
+
+        <Title title='residenciales' />
 
         {toastSuccess && <ToastSuccess contain='Creado exitosamente' onClose={() => setToastSuccess(false)} />}
 
         {toastSuccessMod && <ToastSuccess contain='Modificado exitosamente' onClose={() => setToastSuccessMod(false)} />}
+
+        {permissions.showAdmin &&
+
+          <Add onOpenClose={onOpenCloseForm} />
+
+        }
 
         {!search ? (
         ''
@@ -77,7 +95,7 @@ export default function Residenciales() {
         <div className={styles.searchMain}>
           <SearchResidencial onResults={setResultados} reload={reload} onReload={onReload} onToastSuccessMod={onToastSuccessMod} onOpenCloseSearch={onOpenCloseSearch} />
           {resultados.length > 0 && (
-            <ResidencialesListSearch visitas={resultados} reload={reload} onReload={onReload} />
+            <ResidencialesListSearch user={user} visitas={resultados} reload={reload} onReload={onReload} />
           )}
         </div>
       )}
@@ -93,13 +111,7 @@ export default function Residenciales() {
         ''
       )}
 
-        <ResidencialList reload={reload} onReload={onReload} residenciales={residenciales} onToastSuccessMod={onToastSuccessMod} />
-
-        {user.isadmin === 'Admin' ? (
-          <Add titulo='crear reporte' onOpenClose={onOpenCloseForm} />
-        ) : (
-          ''
-        )}
+        <ResidencialList user={user} reload={reload} onReload={onReload} residenciales={residenciales} onToastSuccessMod={onToastSuccessMod} />
 
       </BasicLayout>
 

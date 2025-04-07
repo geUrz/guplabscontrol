@@ -103,6 +103,10 @@ export default function Signin() {
             <Image src='/img/logo.png' onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} />
           </div>
 
+          <div className={styles.h1}>
+            <h1>Iniciar sesión</h1>
+          </div>
+
           <Form onSubmit={handleSubmit}>
             <FormGroup widths='equal'>
               <FormField error={!!errors.emailOrUsuario}>
@@ -146,7 +150,7 @@ export default function Signin() {
 
         <div className={styles.footer}>
           <div className={styles.section}>
-            <h1>2025 © Copyright | ClickNet</h1>
+            <h1>© 2025 ClickNet</h1>
           </div>
         </div>
 

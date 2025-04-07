@@ -23,22 +23,14 @@ export function ResidenteEditForm(props) {
   const [residenciales, setResidenciales] = useState([])
   const [error, setError] = useState(null)
   const [errors, setErrors] = useState({})
-  
+
   const validarFormUser = () => {
     const newErrors = {}
     if (!formData.newNombre) newErrors.newNombre = 'El campo es requerido'
     if (!formData.newUsuario) newErrors.newUsuario = 'El campo es requerido'
-    if (!formData.newResidencial) {newErrors.newResidencial = 'El campo es requerido'
-    if (!formData.newIsAdmin) {newErrors.newIsAdmin = 'El campo es requerido'}
-    if (formData.isadmin === 'Residente') {
-      if (!formData.newCalle) {
-        newErrors.newCalle = 'El campo es requerido'
-      }
-      if (!formData.newCasa) {
-        newErrors.newCasa = 'El campo es requerido'
-      }
-    }
-    if (!formData.newEmail) newErrors.newEmail = 'El campo es requerido'
+    if (!formData.newResidencial) {
+      newErrors.newResidencial = 'El campo es requerido'
+      if (!formData.newIsAdmin) { newErrors.newIsAdmin = 'El campo es requerido' }
     }
 
     setErrors(newErrors)
@@ -76,7 +68,7 @@ export function ResidenteEditForm(props) {
         email: formData.newEmail,
         isadmin: formData.newIsAdmin,
         residencial_id: formData.newResidencial,
-        password: formData.newPassword,
+        newPassword: formData.newPassword,
       })
 
       onReload()
@@ -113,10 +105,11 @@ export function ResidenteEditForm(props) {
 
   const opcionesNivel = [
     { key: 1, text: 'Admin', value: 'Admin' },
-    { key: 2, text: 'Comité', value: 'Comité' },
-    { key: 3, text: 'Residente', value: 'Residente' },
-    { key: 4, text: 'Caseta', value: 'Caseta' },
-    { key: 5, text: 'Técnico', value: 'Técnico' }
+    { key: 2, text: 'ComitéSU', value: 'ComitéSU' },
+    { key: 3, text: 'Comité', value: 'Comité' },
+    { key: 4, text: 'Residente', value: 'Residente' },
+    { key: 5, text: 'Caseta', value: 'Caseta' },
+    { key: 6, text: 'Técnico', value: 'Técnico' }
   ]
 
   return (
@@ -126,7 +119,7 @@ export function ResidenteEditForm(props) {
       <Form>
         <FormGroup widths='equal'>
           <FormField error={!!errors.newNombre}>
-            <Label>Nuevo nombre</Label>
+            <Label>Nombre</Label>
             <Input
               name='newNombre'
               type='text'
@@ -136,7 +129,7 @@ export function ResidenteEditForm(props) {
             {errors.newNombre && <Message negative>{errors.newNombre}</Message>}
           </FormField>
           <FormField error={!!errors.newUsuario}>
-            <Label>Nuevo usuario</Label>
+            <Label>Usuario</Label>
             <Input
               name='newUsuario'
               type='text'
@@ -170,50 +163,47 @@ export function ResidenteEditForm(props) {
             />
             {errors.newIsAdmin && <Message negative>{errors.newIsAdmin}</Message>}
           </FormField>
-          
-          {formData.newIsAdmin === 'Residente' && (
-                <>
-                  <FormField>
-                    <Label>Privada</Label>
-                    <Input
-                      name='newPrivada'
-                      type="text"
-                      value={formData.newPrivada}
-                      onChange={handleChange}
-                    />
-                  </FormField>
-                  <FormField error={!!errors.newCalle}>
-                    <Label>Calle</Label>
-                    <Input
-                      name='newCalle'
-                      type="text"
-                      value={formData.newCalle}
-                      onChange={handleChange}
-                    />
-                    {errors.newCalle && <Message negative>{errors.newCalle}</Message>}
-                  </FormField>
-                  <FormField error={!!errors.newCasa}>
-                    <Label>Casa</Label>
-                    <Input
-                      name='newCasa'
-                      type='number'
-                      value={formData.newCasa}
-                      onChange={handleChange}
-                    />
-                    {errors.newCasa && <Message negative>{errors.newCasa}</Message>}
-                  </FormField>
-                </>
-              )}
 
-          <FormField error={!!errors.newEmail}>
-            <Label>Nuevo correo</Label>
+          {formData.newIsAdmin === 'Residente' && (
+            <>
+              <FormField>
+                <Label>Privada</Label>
+                <Input
+                  name='newPrivada'
+                  type="text"
+                  value={formData.newPrivada}
+                  onChange={handleChange}
+                />
+              </FormField>
+              <FormField>
+                <Label>Calle</Label>
+                <Input
+                  name='newCalle'
+                  type="text"
+                  value={formData.newCalle}
+                  onChange={handleChange}
+                />
+              </FormField>
+              <FormField>
+                <Label>Casa</Label>
+                <Input
+                  name='newCasa'
+                  type='number'
+                  value={formData.newCasa}
+                  onChange={handleChange}
+                />
+              </FormField>
+            </>
+          )}
+
+          <FormField>
+            <Label>Correo</Label>
             <Input
               name='newEmail'
               type='email'
               value={formData.newEmail}
               onChange={handleChange}
             />
-            {errors.newEmail && <Message negative>{errors.newEmail}</Message>}
           </FormField>
           <FormField>
             <Label>Nueva contraseña</Label>

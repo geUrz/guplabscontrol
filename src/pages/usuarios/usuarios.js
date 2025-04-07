@@ -1,9 +1,9 @@
-import { Add, Loading, ToastSuccess } from '@/components/Layouts'
+import { Add, Loading, Title, ToastSuccess } from '@/components/Layouts'
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 import { useAuth } from '@/contexts/AuthContext'
 import { BasicLayout, BasicModal } from '@/layouts'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
 import { UsuarioForm, UsuarioList, SearchUsuarios, UsuariosListSearch } from '@/components/Usuarios'
 import styles from './usuarios.module.css'
@@ -56,25 +56,43 @@ export default function Usuarios() {
     }, 3000)
   }
 
+  const permissions = useMemo(() => {
+
+    if(!user) return {}
+
+    return {
+
+      showDatosAdmin: ['Admin'].includes(user.isadmin)
+
+    }
+
+  }, [user])
+
   if (loading) {
-    return <Loading size={45} loading={0} />
+    return <Loading size={45} loading={'L'} />
   }
 
   return (
 
     <ProtectedRoute>
 
-      <BasicLayout title='Usuarios' relative onReload={onReload}>
+      <BasicLayout relative onReload={onReload}>
+
+        <Title title='usuarios' />
 
         {toastSuccessUsuario && <ToastSuccess contain='Creado exitosamente' onClose={() => setToastSuccessUsuario(false)} />}
 
         {toastSuccessUsuarioMod && <ToastSuccess contain='Modificado exitosamente' onClose={() => setToastSuccessUsuarioMod(false)} />}
 
+        {permissions.showDatosAdmin &&
+          <Add onOpenClose={onOpenCloseForm} />
+        }
+
         {!search ? (
           ''
         ) : (
           <div className={styles.searchMain}>
-            <SearchUsuarios onResults={setResultados} reload={reload} onReload={onReload} onToastSuccessUsuarioMod={onToastSuccessUsuarioMod} onOpenCloseSearch={onOpenCloseSearch} />
+            <SearchUsuarios user={user} onResults={setResultados} reload={reload} onReload={onReload} onToastSuccessUsuarioMod={onToastSuccessUsuarioMod} onOpenCloseSearch={onOpenCloseSearch} />
             {resultados.length > 0 && (
               <UsuariosListSearch visitas={resultados} reload={reload} onReload={onReload} />
             )}
@@ -91,12 +109,6 @@ export default function Usuarios() {
         ) : (
           ''
         )}
-
-        {user && user.isadmin === 'Admin' ? (
-          <Add onOpenClose={onOpenCloseForm} />
-        ) : (
-          ''
-        )} 
 
         <UsuarioList reload={reload} onReload={onReload} usuarios={usuarios} onToastSuccessUsuarioMod={onToastSuccessUsuarioMod} /> 
 

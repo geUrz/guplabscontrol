@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { BasicLayout, BasicModal } from '@/layouts'
 import axios from 'axios'
 import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
-import { Add, Loading, ToastDelete, ToastSuccess } from '@/components/Layouts'
+import { Add, Loading, Title, ToastDelete, ToastSuccess } from '@/components/Layouts'
 import { useAuth } from '@/contexts/AuthContext'
 import { VisitasList, VisitaForm, SearchVisitas, VisitasListSearch } from '@/components/Visitas'
 import styles from './visitas.module.css'
@@ -69,14 +69,16 @@ export default function Visitas() {
   }
 
   if (loading) {
-    return <Loading size={45} loading={0} />
+    return <Loading size={45} loading={'L'} />
   }
 
   return (
 
     <ProtectedRoute>
 
-      <BasicLayout title='mis visitas' relative reload={reload} onReload={onReload}>
+      <BasicLayout relative reload={reload} onReload={onReload}>
+
+        <Title title='mis visitas' />
 
         {toastSuccess && <ToastSuccess contain='Creada exitosamente' onClose={() => setToastSuccess(false)} />}
 

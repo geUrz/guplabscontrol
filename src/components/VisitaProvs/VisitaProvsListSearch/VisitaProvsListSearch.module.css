@@ -1,6 +1,5 @@
 .main{
-  padding-bottom: 200px;
-  margin-top: 20px;
+  padding: 20px 0 200px 0;
   width: 100%;
   height: auto;
   display: flex;
@@ -21,7 +20,7 @@
 
 .section > div{
   padding: 8px 0;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   width: 100%;
   height: auto;
   display: flex;

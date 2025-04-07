@@ -8,7 +8,7 @@ import { ResidencialDetalles } from '../ResidencialDetalles'
 
 export function ResidencialesListSearch(props) {
 
-  const { reload, onReload, residenciales, onToastSuccessMod, onToastSuccessDel } = props
+  const { user, reload, onReload, residenciales, onToastSuccessMod, onToastSuccessDel } = props
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [residencialSeleccionado, setResidencialSeleccionado] = useState(null)
@@ -64,6 +64,7 @@ export function ResidencialesListSearch(props) {
       <BasicModal title='detalles del residencial' show={showDetalles} onClose={onCloseDetalles}>
         {residencialSeleccionado && (
           <ResidencialDetalles
+            user={user}
             reload={reload}
             onReload={onReload}
             residencial={residencialSeleccionado}

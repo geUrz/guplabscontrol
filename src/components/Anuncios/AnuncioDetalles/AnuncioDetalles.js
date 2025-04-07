@@ -1,16 +1,16 @@
-import { IconClose, Confirm, DatosRes } from '@/components/Layouts';
-import { convertTo12HourFormat, formatDate } from '@/helpers';
-import { BasicModal } from '@/layouts';
-import { FaCheck, FaEdit, FaInfoCircle, FaTimes, FaTrash } from 'react-icons/fa';
-import { useState } from 'react';
-import { AnuncioEditForm } from '../AnuncioEditForm/AnuncioEditForm';
-import axios from 'axios';
-import styles from './AnuncioDetalles.module.css';
-import { useAuth } from '@/contexts/AuthContext';
+import { IconClose, Confirm, DatosRes, IconEdit, IconDel } from '@/components/Layouts'
+import { convertTo12HourFormat, formatDate } from '@/helpers'
+import { BasicModal } from '@/layouts'
+import { FaCheck, FaTimes } from 'react-icons/fa'
+import { useEffect, useMemo, useState } from 'react'
+import { AnuncioEditForm } from '../AnuncioEditForm/AnuncioEditForm'
+import axios from 'axios'
+import styles from './AnuncioDetalles.module.css'
+import { useAuth } from '@/contexts/AuthContext'
 
 export function AnuncioDetalles(props) {
   const { reload, onReload, anuncio, onCloseDetalles, onToastSuccessMod, onToastSuccessDel } = props
-  
+
   const { user } = useAuth()
 
   const [showEditAnuncio, setShowEditAnuncio] = useState(false)
@@ -36,6 +36,29 @@ export function AnuncioDetalles(props) {
     }
   }
 
+  const [anuncioData, setAnuncioData] = useState(anuncio)
+
+  useEffect(() => {
+    setAnuncioData(anuncio)
+  }, [anuncio])
+
+  const actualizarAnuncio = (nuevaData) => {
+    setAnuncioData((prevState) => ({
+      ...prevState,
+      ...nuevaData,
+    }))
+  }
+
+  const permissions = useMemo(() => {
+
+    if(!user) return {}
+
+    return{
+      showAdmin: ['Admin', 'ComitéSU', 'Comité'].includes(user?.isadmin)
+    }
+
+  }, [user])
+
   return (
     <>
       <IconClose onOpenClose={onCloseDetalles} />
@@ -45,64 +68,43 @@ export function AnuncioDetalles(props) {
           <div className={styles.box1_1}>
             <div>
               <h1>Anuncio</h1>
-              <h2>{anuncio.anuncio}</h2>
+              <h2>{anuncioData?.anuncio}</h2>
             </div>
             <div>
               <h1>Descripción</h1>
-              <h2>{anuncio.descripcion}</h2>
+              <h2>{anuncioData?.descripcion}</h2>
             </div>
           </div>
           <div className={styles.box1_2}>
             <div>
               <h1>Folio</h1>
-              <h2>{anuncio.folio}</h2>
+              <h2>{anuncioData?.folio}</h2>
             </div>
             <div>
               <h1>Fecha</h1>
-              <h2>{formatDate(anuncio.date)}</h2>
+              <h2>{formatDate(anuncioData?.date)}</h2>
             </div>
             <div>
               <h1>Hora</h1>
-              <h2>{convertTo12HourFormat(anuncio.hora)}</h2>
+              <h2>{convertTo12HourFormat(anuncioData?.hora)}</h2>
             </div>
           </div>
         </div>
 
-        {user && user.isadmin === 'Admin' || user && user.isadmin === 'Comité' ? (
+        {permissions.showAdmin &&
           <>
-
-            <div className={styles.iconEdit}>
-              <div>
-                <FaEdit onClick={onOpenEditAnuncio} />
-              </div>
-            </div>
-              <div className={styles.iconDel}>
-                <div>
-                  <FaTrash onClick={onOpenCloseConfirmDel} />
-                </div>
-              </div>
+            <IconEdit onOpenEdit={onOpenEditAnuncio} />
+            <IconDel setShowConfirmDel={onOpenCloseConfirmDel} />
           </>
-        ) : (
-          ''
-        )}
+        }
       </div>
 
       <BasicModal title='Editar anuncio' show={showEditAnuncio} onClose={onOpenEditAnuncio}>
-        <AnuncioEditForm reload={reload} onReload={onReload} anuncio={anuncio} onOpenEditAnuncio={onOpenEditAnuncio} onToastSuccessMod={onToastSuccessMod} />
+        <AnuncioEditForm reload={reload} onReload={onReload} anuncioData={anuncioData} actualizarAnuncio={actualizarAnuncio} onOpenEditAnuncio={onOpenEditAnuncio} onToastSuccessMod={onToastSuccessMod} />
       </BasicModal>
 
       <Confirm
         open={showConfirmDel}
-        cancelButton={
-          <div className={styles.iconClose}>
-            <FaTimes />
-          </div>
-        }
-        confirmButton={
-          <div className={styles.iconCheck}>
-            <FaCheck />
-          </div>
-        }
         onConfirm={handleDeleteAnuncio}
         onCancel={onOpenCloseConfirmDel}
         content='¿ Estas seguro de eliminar el anuncio ?'

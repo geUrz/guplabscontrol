@@ -26,7 +26,7 @@ export function SearchVisitas(props) {
 
       try {
         const res = await axios.get(`/api/visitas/visitas?search=${query}`)
-        const filteredVisitas = res.data.filter(visita => visita.residencial_id === user.residencial_id)
+        const filteredVisitas = res.data.filter(visita => visita.residencial_id === user.residencial_id && visita.usuario_id === user.id)
         setVisitas(filteredVisitas)
       } catch (err) {
         setError('No se encontraron visitas')

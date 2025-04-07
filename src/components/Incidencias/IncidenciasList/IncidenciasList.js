@@ -3,21 +3,17 @@ import { map, size } from 'lodash'
 import { FaCarCrash } from 'react-icons/fa'
 import { BasicModal } from '@/layouts'
 import { IncidenciaDetalles } from '../IncidenciaDetalles'
-import { useEffect, useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useState } from 'react'
 import { getStatusClass } from '@/helpers/getStatusClass/getStatusClass'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './IncidenciasList.module.css'
 
 export function IncidenciasList(props) {
 
-  const { reload, onReload, incidencias, onToastSuccessMod, onToastSuccessDel } = props
-
-  const { loading } = useAuth()
+  const { user, reload, onReload, incidencias, onToastSuccessMod, onToastSuccessDel } = props
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [incidenciaSeleccionada, setIncidenciaSeleccionada] = useState(null)
-  const [showLoading, setShowLoading] = useState(true)
 
   const onOpenDetalles = (incidencia) => {
     setIncidenciaSeleccionada(incidencia)
@@ -29,23 +25,11 @@ export function IncidenciasList(props) {
     setShowDetalles(false)
   }
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoading(false)
-    }, 800)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (loading) {
-    return <Loading size={45} loading={0} />
-  }
-
   return (
 
     <>
 
-      {showLoading ? (
+      {!incidencias ? (
         <Loading size={45} loading={1} />
       ) : (
         size(incidencias) === 0 ? (
@@ -86,6 +70,7 @@ export function IncidenciasList(props) {
       <BasicModal title='detalles de la incidencia' show={showDetalles} onClose={onCloseDetalles}>
         {incidenciaSeleccionada && (
           <IncidenciaDetalles
+          user={user}
             reload={reload}
             onReload={onReload}
             incidencia={incidenciaSeleccionada}

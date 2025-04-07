@@ -1,16 +1,14 @@
 import { Button, Form, FormField, FormGroup, Input, Label, Message, TextArea } from 'semantic-ui-react'
 import { useState } from 'react'
 import axios from 'axios'
-import { useAuth } from '@/contexts/AuthContext'
 import { IconClose } from '@/components/Layouts/IconClose/IconClose'
 import styles from './IncidenciaForm.module.css'
 import { genIncId } from '@/helpers'
 
 export function IncidenciaForm(props) {
 
-  const { reload, onReload, onOpenCloseForm, onToastSuccess } = props
-  
-  const { user } = useAuth()
+  const { user, reload, onReload, onOpenCloseForm, onToastSuccess } = props
+
   
   const [incidencia, setIncidencia] = useState('')
   const [descripcion, setDescripcion] = useState('')
@@ -65,6 +63,19 @@ export function IncidenciaForm(props) {
         estado, 
         residencial_id: user.residencial_id
       })
+
+      await axios.post('/api/notificaciones', 
+        {
+          title: '¡Incidencia creada!',
+          body: `${incidencia}`,
+          url: '/incidencias' 
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json', 
+          },
+        }
+      )
 
       setIncidencia('')
       setDescripcion('')

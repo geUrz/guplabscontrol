@@ -7,15 +7,15 @@ import { useAuth } from '@/contexts/AuthContext'
 
 export function IncidenciaEditForm(props) {
 
-  const { reload, onReload, incidencia, onOpenEditIncidencia, onToastSuccessMod } = props
+  const { reload, onReload, incidenciaData, actualizarIncidencia, onOpenEditIncidencia, onToastSuccessMod } = props
 
   const { user } = useAuth()
 
   const [formData, setFormData] = useState({
-    incidencia: incidencia.incidencia,
-    descripcion: incidencia.descripcion,
-    zona: incidencia.zona,
-    estado: incidencia.estado
+    incidencia: incidenciaData.incidencia,
+    descripcion: incidenciaData.descripcion,
+    zona: incidenciaData.zona,
+    estado: incidenciaData.estado
   })
 
   const [errors, setErrors] = useState({})
@@ -60,8 +60,9 @@ export function IncidenciaEditForm(props) {
     }
 
     try {
-      await axios.put(`/api/incidencias/incidencias?id=${incidencia.id}`, formData)
+      await axios.put(`/api/incidencias/incidencias?id=${incidenciaData.id}`, formData)
       onReload()
+      actualizarIncidencia(formData)
       onOpenEditIncidencia()
       onToastSuccessMod()
     } catch (error) {

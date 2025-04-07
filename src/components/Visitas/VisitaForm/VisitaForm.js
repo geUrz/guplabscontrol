@@ -1,24 +1,25 @@
 import { Button, Checkbox, Dropdown, Form, FormField, FormGroup, Input, Label } from 'semantic-ui-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import { useAuth } from '@/contexts/AuthContext';
 import { IconClose } from '@/components/Layouts/IconClose/IconClose';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from './VisitaForm.module.css';
+import { BasicModal } from '@/layouts';
+import { ProtectedMessage } from '@/components/Layouts';
 
 export function VisitaForm(props) {
-  const [visita, setVisita] = useState('');
-  const [tipovisita, setTipovisita] = useState('');
-  const [tipoacceso, setTipoacceso] = useState('');
-  const [date, setDate] = useState(null);
-  const [fromDate, setFromDate] = useState(null);
-  const [toDate, setToDate] = useState(null);
-  const [hora, setHora] = useState('');
-  const [diasSeleccionados, setDiasSeleccionados] = useState([]);
+  const [visita, setVisita] = useState('')
+  const [tipovisita, setTipovisita] = useState('')
+  const [tipoacceso, setTipoacceso] = useState('')
+  const [date, setDate] = useState(null)
+  const [fromDate, setFromDate] = useState(null)
+  const [toDate, setToDate] = useState(null)
+  const [hora, setHora] = useState('')
+  const [diasSeleccionados, setDiasSeleccionados] = useState([])
   
   const { user, reload, onReload, onOpenCloseForm, onToastSuccess } = props;
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({})
   
   const diasOrdenados = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
@@ -49,52 +50,29 @@ export function VisitaForm(props) {
   };
 
   const handleVisitaChange = (e) => {
-    setVisita(e.target.value);
+    setVisita(e.target.value)
   };
 
   const handleDiaChange = (dia) => {
     setDiasSeleccionados((prev) => 
       prev.includes(dia) ? prev.filter((d) => d !== dia) : [...prev, dia]
-    );
+    )
   };
 
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+  const [showError, setShowError] = useState(false)
+  const onCloseError = () => {
+    setShowError(false)
+    onOpenCloseForm()
+  }
+
   const crearVisita = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    // Si "Para mi" está seleccionado, no validamos ni pedimos los datos completos
-    if (tipovisita === 'ParaMi') {
-      try {
-        await axios.post('/api/visitas/visitas', {
-          usuario_id: user.id,
-          visita: 'Residente',
-          tipovisita: 'Residente',
-          tipoacceso: 'frecuente',
-          fromDate: fromDate.toISOString().split('T')[0],
-          toDate: toDate.toISOString().split('T')[0],
-          estado: 'Sin ingresar',
-          residencial_id: user.residencial_id,
-        });
+    setIsLoading(true)
+    setErrorMessage("")
 
-        // Después de enviar, reiniciamos el formulario
-        setVisita('');
-        setTipovisita('');
-        setTipoacceso('');
-        setDate(null);
-        setFromDate(null);
-        setToDate(null);
-        setHora('');
-        setDiasSeleccionados([]);
-
-        onReload();
-        onOpenCloseForm();
-        onToastSuccess();
-      } catch (error) {
-        console.error('Error al crear la visita:', error);
-      }
-      return;
-    }
-
-    // Si no es "Para mi", validamos y enviamos el formulario normalmente
     if (!validarForm()) return;
 
     const formattedDate = date ? date.toISOString().split('T')[0] : null;
@@ -103,9 +81,10 @@ export function VisitaForm(props) {
 
     const diasOrdenadosSeleccionados = diasSeleccionados.sort((a, b) => 
       diasOrdenados.indexOf(a) - diasOrdenados.indexOf(b)
-    );
+    )
 
     try {
+
       await axios.post('/api/visitas/visitas', {
         usuario_id: user.id,
         visita,
@@ -115,59 +94,52 @@ export function VisitaForm(props) {
         fromDate: formattedFromDate,
         toDate: formattedToDate,
         hora,
-        estado: 'Sin ingresar', // Este valor podría ser el estado por defecto
+        estado: 'Sin ingresar', 
         dias: tipoacceso === 'frecuente' ? diasOrdenadosSeleccionados.join(', ') : null,
         residencial_id: user.residencial_id
-      });
+      }, {
+        withCredentials: true,
+      })
 
-      // Reiniciar estado del formulario
-      setVisita('');
-      setTipovisita('');
-      setTipoacceso('');
-      setDate(null);
-      setFromDate(null);
-      setToDate(null);
-      setHora('');
-      setDiasSeleccionados([]);
+      setVisita('')
+      setTipovisita('')
+      setTipoacceso('')
+      setDate(null)
+      setFromDate(null)
+      setToDate(null)
+      setHora('')
+      setDiasSeleccionados([])
 
-      onReload();
-      onOpenCloseForm();
-      onToastSuccess();
+      onReload()
+      onOpenCloseForm()
+      onToastSuccess()
+      setIsLoading(false)
     } catch (error) {
-      console.error('Error al crear la visita:', error);
+      setIsLoading(false)
+
+      if (error.response) {
+        setErrorMessage(error.response.data.error || "Hubo un problema al crear la visita.")
+      } else {
+        setErrorMessage("No se pudo conectar al servidor.")
+      }
+
+      setShowError(true)
+    } finally {
+      setIsLoading(false)
     }
   };
 
   const opcionesTipovisita = [
-    { key: 1, text: 'Para mí', value: 'ParaMi' },
-    { key: 2, text: 'Familia', value: 'Familia' },
-    { key: 3, text: 'Amigo', value: 'Amigo' },
-    { key: 4, text: 'Proveedor', value: 'Proveedor' },
-    { key: 5, text: 'Diddi, Uber, Rappi', value: 'Diddi, Uber, Rappi' }
+    { key: 1, text: 'Familia', value: 'Familia' },
+    { key: 2, text: 'Amigo', value: 'Amigo' },
+    { key: 3, text: 'Proveedor', value: 'Proveedor' },
+    { key: 4, text: 'Diddi, Uber, Rappi', value: 'Diddi, Uber, Rappi' }
   ];
 
   const opcionesTipoacceso = [
     { key: 1, text: 'Eventual', value: 'eventual' },
     { key: 2, text: 'Frecuente', value: 'frecuente' }
-  ];
-
-  // Cuando 'tipovisita' sea 'Para mi', desactivamos todos los campos excepto 'Tipo de visita'
-  const isTipovisitaParaMi = tipovisita === 'ParaMi';
-
-  // Calculando las fechas cuando 'tipovisita' cambia
-  useEffect(() => {
-    if (tipovisita === 'ParaMi') {
-      const today = new Date();
-      const sixMonthsLater = new Date(today);
-      sixMonthsLater.setMonth(today.getMonth() + 6); // Sumar 6 meses a la fecha actual
-
-      setFromDate(today); // La fecha actual para fromDate
-      setToDate(sixMonthsLater); // Seis meses después para toDate
-    } else {
-      setFromDate(null);
-      setToDate(null);
-    }
-  }, [tipovisita]);
+  ]
 
   return (
     <>
@@ -183,7 +155,6 @@ export function VisitaForm(props) {
                   type="text"
                   value={visita}
                   onChange={handleVisitaChange}
-                  disabled={isTipovisitaParaMi}
                 />
                 {errors.visita && <span className={styles.error}>{errors.visita}</span>}
               </FormField>
@@ -208,7 +179,6 @@ export function VisitaForm(props) {
                   options={opcionesTipoacceso}
                   value={tipoacceso}
                   onChange={(e, { value }) => setTipoacceso(value)}
-                  disabled={isTipovisitaParaMi}
                 />
                 {errors.tipoacceso && <span className={styles.error}>{errors.tipoacceso}</span>}
               </FormField>
@@ -224,7 +194,6 @@ export function VisitaForm(props) {
                       id={dia}
                       checked={diasSeleccionados.includes(dia)}
                       onChange={() => handleDiaChange(dia)}
-                      disabled={isTipovisitaParaMi}
                     />
                   </div>
                 ))}
@@ -246,7 +215,6 @@ export function VisitaForm(props) {
                     isClearable
                     showPopperArrow={false}
                     popperPlacement="top"
-                    disabled={isTipovisitaParaMi}
                   />
                   {errors.fromDate && <span className={styles.error}>{errors.fromDate}</span>}
                 </FormField>
@@ -261,7 +229,6 @@ export function VisitaForm(props) {
                     isClearable
                     showPopperArrow={false}
                     popperPlacement="top"
-                    disabled={isTipovisitaParaMi}
                   />
                   {errors.toDate && <span className={styles.error}>{errors.toDate}</span>}
                   {errors.dateRange && <span className={styles.error}>{errors.dateRange}</span>}
@@ -279,18 +246,22 @@ export function VisitaForm(props) {
                   isClearable
                   showPopperArrow={false}
                   popperPlacement="top"
-                  disabled={isTipovisitaParaMi}
                 />
                 {errors.date && <span className={styles.error}>{errors.date}</span>}
               </FormField>
             )}
 
-            <Button primary onClick={crearVisita}>
+            <Button primary loading={isLoading} onClick={crearVisita}>
               Crear
             </Button>
           </Form>
         </div>
       </div>
+
+      <BasicModal show={showError} onClose={onCloseError} >
+        <ProtectedMessage errorMessage={errorMessage} onCloseError={onCloseError}  />
+      </BasicModal>
+
     </>
-  );
+  )
 }

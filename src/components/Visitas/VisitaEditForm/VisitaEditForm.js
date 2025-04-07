@@ -12,7 +12,7 @@ registerLocale('es', es)
 
 export function VisitaEditForm(props) {
 
-  const { reload, onReload, visitaData, actualizarVisita, onOpenEditVisita, onToastSuccessMod } = props
+  const { user, reload, onReload, visitaData, actualizarVisita, onOpenEditVisita, onToastSuccessMod } = props
 
   const diasOrdenados = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
 
@@ -98,6 +98,8 @@ export function VisitaEditForm(props) {
   
     const formattedData = {
       ...formData,
+      usuario_id: user.id,
+      residencial_id: user.residencial_id,
       date: formatDate(formData.date),
       fromDate: formatDate(formData.fromDate),
       toDate: formatDate(formData.toDate),
@@ -116,12 +118,17 @@ export function VisitaEditForm(props) {
     }
   }
 
-  const opcionesTipovisita = [
-    { key: 1, text: 'Familia', value: 'Familia' },
-    { key: 2, text: 'Amigo', value: 'Amigo' },
-    { key: 3, text: 'Proveedor', value: 'Proveedor' },
-    { key: 4, text: 'Diddi, Uber, Rappi', value: 'Diddi, Uber, Rappi' }
-  ]
+  const opcionesTipovisita = 
+    visitaData.tipovisita === 'Residente' ? 
+    [
+      { key: 1, text: 'Residente', value: 'Residente' }
+    ] :
+    [
+      { key: 1, text: 'Familia', value: 'Familia' },
+      { key: 2, text: 'Amigo', value: 'Amigo' },
+      { key: 3, text: 'Proveedor', value: 'Proveedor' },
+      { key: 4, text: 'Diddi, Uber, Rappi', value: 'Diddi, Uber, Rappi' }
+    ]
 
   const opcionesTipoacceso = [
     { key: 1, text: 'Eventual', value: 'eventual' },

@@ -6,9 +6,11 @@ import { genUserId } from '@/helpers'
 import styles from './UsuarioForm.module.css'
 
 export function UsuarioForm(props) {
-  const { reload, onReload, onOpenCloseForm, onToastSuccessUsuario } = props;
+  const { reload, onReload, onOpenCloseForm, onToastSuccessUsuario } = props
 
-  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [errors, setErrors] = useState({})
   const [credentials, setCredentials] = useState({
     nombre: '',
     usuario: '',
@@ -20,34 +22,34 @@ export function UsuarioForm(props) {
     residencial_id: '',
     password: '',
     confirmarPassword: ''
-  });
+  })
 
-  const [residenciales, setResidenciales] = useState([]);
-  const [error, setError] = useState(null);
+  const [residenciales, setResidenciales] = useState([])
+  const [error, setError] = useState(null)
 
   // Función para obtener los residenciales
   useEffect(() => {
     const fetchResidenciales = async () => {
       try {
-        const response = await axios.get('/api/residenciales/residenciales');
+        const response = await axios.get('/api/residenciales/residenciales')
         const opcionesResidenciales = response.data.map(res => ({
           key: res.id,
           text: res.nombre,
           value: res.id
-        }));
-        setResidenciales(opcionesResidenciales);
+        }))
+        setResidenciales(opcionesResidenciales)
       } catch (error) {
-        console.error('Error al cargar residenciales:', error);
+        console.error('Error al cargar residenciales:', error)
       }
     };
-    fetchResidenciales();
-  }, []);
+    fetchResidenciales()
+  }, [])
 
   const handleChange = (e, { name, value }) => {
     setCredentials({
       ...credentials,
       [name]: value
-    });
+    })
   };
 
   const validarFormSignUp = () => {
@@ -59,10 +61,6 @@ export function UsuarioForm(props) {
 
     if (!credentials.usuario) {
       newErrors.usuario = 'El campo es requerido'
-    }
-
-    if (!credentials.email) {
-      newErrors.email = 'El campo es requerido'
     }
 
     if (!credentials.isadmin) {
@@ -90,21 +88,23 @@ export function UsuarioForm(props) {
       newErrors.confirmarPassword = 'El campo es requerido'
     }
 
-    setErrors(newErrors);
+    setErrors(newErrors)
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
+
+    setIsLoading(true)
 
     if (!validarFormSignUp()) {
-      return;
+      return
     }
-    setError(null);
+    setError(null)
 
     if (credentials.password !== credentials.confirmarPassword) {
-      setError("Las contraseñas no coinciden");
-      return;
+      setError("Las contraseñas no coinciden")
+      return
     }
 
     const folio = genUserId(4)
@@ -121,7 +121,7 @@ export function UsuarioForm(props) {
         isactive,
         residencial_id: credentials.residencial_id,
         password: credentials.password
-      });
+      })
 
       setCredentials({
         nombre: '',
@@ -131,21 +131,22 @@ export function UsuarioForm(props) {
         residencial_id: '',
         password: '',
         confirmarPassword: ''
-      });
+      })
 
-      setError(null);
-      onReload(); // Puedes llamar a la función de recarga si es necesario
-      onOpenCloseForm(); // Cerrar el formulario después de crear el usuario
-      onToastSuccessUsuario(); // Mostrar mensaje de éxito
+      setError(null)
+      onReload() // Puedes llamar a la función de recarga si es necesario
+      onOpenCloseForm() // Cerrar el formulario después de crear el usuario
+      onToastSuccessUsuario() // Mostrar mensaje de éxito
     } catch (error) {
-      console.error('Error capturado:', error);
+      setIsLoading(false)
+      console.error('Error capturado:', error)
 
       if (error.response && error.response.data && error.response.data.error) {
-        setError(error.response.data.error);
+        setError(error.response.data.error)
       } else if (error.message) {
-        setError(error.message);
+        setError(error.message)
       } else {
-        setError('¡ Ocurrió un error inesperado !');
+        setError('¡ Ocurrió un error inesperado !')
       }
     }
   };
@@ -156,7 +157,7 @@ export function UsuarioForm(props) {
 
       <div className={styles.main}>
         <div className={styles.container}>
-          <Form onSubmit={handleSubmit}>
+          <Form>
             <FormGroup widths='equal'>
               <FormField error={!!errors.nombre}>
                 <Label>Nombre</Label>
@@ -199,7 +200,11 @@ export function UsuarioForm(props) {
                   selection
                   options={[
                     { key: 'Admin', text: 'Admin', value: 'Admin' },
-                    { key: 'Técnico', text: 'Técnico', value: 'Técnico' },
+                    { key: 'ComitéSU', text: 'ComitéSU', value: 'ComitéSU' },
+                    { key: 'Comité', text: 'Comité', value: 'Comité' },
+                    { key: 'Residente', text: 'Residente', value: 'Residente' },
+                    { key: 'Caseta', text: 'Caseta', value: 'Caseta' },
+                    { key: 'Técnico', text: 'Técnico', value: 'Técnico' }
                   ]}
                   name='isadmin'
                   value={credentials.isadmin}
@@ -207,7 +212,7 @@ export function UsuarioForm(props) {
                 />
                 {errors.isadmin && <Message negative>{errors.isadmin}</Message>}
               </FormField>
-              <FormField error={!!errors.email}>
+              <FormField>
                 <Label>Correo</Label>
                 <Input
                   name='email'
@@ -215,7 +220,6 @@ export function UsuarioForm(props) {
                   value={credentials.email}
                   onChange={handleChange}
                 />
-                {errors.email && <Message negative>{errors.email}</Message>}
               </FormField>
               <FormField error={!!errors.password}>
                 <Label>Contraseña</Label>
@@ -239,12 +243,12 @@ export function UsuarioForm(props) {
               </FormField>
             </FormGroup>
             {error && <p className={styles.error}>{error}</p>}
-            <Button primary type='submit'>
+            <Button primary loading={isLoading} onClick={handleSubmit}>
               Crear
             </Button>
           </Form>
         </div>
       </div>
     </>
-  );
+  )
 }
